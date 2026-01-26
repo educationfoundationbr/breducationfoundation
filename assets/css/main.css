@@ -82,6 +82,15 @@ body.support-us-page .main {
  padding-top: 0;
 }
 
+body.contact-page main,
+body.contact-page .main {
+  padding-top: 0;
+}
+
+body.contact-page .contact.section {
+  padding-top: calc(var(--header-offset) + 60px);
+}
+
 a {
   color: var(--accent-color);
   text-decoration: none;
