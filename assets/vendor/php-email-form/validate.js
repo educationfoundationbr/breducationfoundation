@@ -9,6 +9,9 @@
   let forms = document.querySelectorAll('.php-email-form');
 
   forms.forEach( function(e) {
+    if (e.dataset.formService) {
+      return;
+    }
     e.addEventListener('submit', function(event) {
       event.preventDefault();
 

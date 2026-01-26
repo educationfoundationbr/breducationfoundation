@@ -6,7 +6,7 @@
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
   <title>Grants | Education Foundation of Bridgewater-Raritan</title>
 
-  <link href="../assets/img/education/favicon.png" rel="icon">
+  <link href="../assets/img/favicon.png" rel="icon">
   <link href="../assets/img/apple-touch-icon.png" rel="apple-touch-icon">
 
   <link href="https://fonts.googleapis.com" rel="preconnect">
@@ -24,6 +24,7 @@
 </head>
 
 <body class="grants-page">
+ <!-- todo: confirm application window messaging -->
 
   <header id="header" class="header d-flex align-items-center fixed-top">
     <div class="header-container container-fluid container-xl position-relative d-flex align-items-center justify-content-between">
@@ -62,13 +63,15 @@
   <main class="main">
 
     <section class="grants-hero section">
+     <!-- note: any endpoint wiring lives in assets/js/main.js -->
       <div class="container">
         <div class="row align-items-center g-5">
-          <div class="col-lg-6" data-aos="fade-right">
+         <div class="col-lg-6" data-aos="fade-right">
             <span class="grants-eyebrow">Grants</span>
             <h1 class="grants-title">Fueling creative, innovative learning.</h1>
             <p class="grants-lead">The Education Foundation of Bridgewater-Raritan provides grants for unique scientific, cultural, artistic, and scholastic programs not available through public funding. Your project idea can become a real experience for students across the district.</p>
             <div class="grants-actions">
+             <!-- todo: add deadline banner if needed -->
               <a href="#grant-options" class="grants-btn">Apply for a Grant</a>
               <a href="/grant-recipients/" class="grants-btn-outline">View Grant Recipients</a>
             </div>
@@ -91,6 +94,7 @@
           <div class="col-lg-6" data-aos="fade-left">
             <div class="grants-hero-card">
               <div class="grants-hero-card-head">
+               <!-- note: "Open Now" tag can change with cycle -->
                 <div>
                   <h3>Mini Grant Application</h3>
                   <p>Use the application below to submit a Mini Grant request for funding a creative and innovative program at Bridgewater-Raritan schools.</p>
@@ -98,6 +102,7 @@
                 <span class="grants-tag">Open Now</span>
               </div>
               <ul class="grants-hero-list">
+               <!-- note: keep these bullets short -->
                 <li><i class="bi bi-check-circle-fill"></i> Mini Grant submission form for faculty and staff of BRRSD.</li>
                 <li><i class="bi bi-check-circle-fill"></i> Maximums: $750 classroom, $1,500 collaborative.</li>
                 <li><i class="bi bi-check-circle-fill"></i> Include budget details and project outcomes.</li>
@@ -155,6 +160,7 @@
     </section>
 
     <section id="how-to-apply" class="how-to-apply section">
+     <!-- reminder: confirm steps phrasing -->
       <div class="container">
         <div class="row g-5 align-items-start">
           <div class="col-lg-6" data-aos="fade-up">
@@ -276,56 +282,56 @@
           <div class="modal-body">
             <p>Use the application below to submit a Mini Grant request for funding a creative and innovative program at Bridgewater-Raritan schools. "*" indicates required fields.</p>
 
-            <form class="grant-form">
-              <div class="form-section">
+            <form class="grant-form" data-form-service="gcloud" data-form-name="grant_application">
+             <div class="form-section">
                 <h6>Mini Grant Application</h6>
                 <div class="row g-3">
-                  <div class="col-12">
-                    <label class="form-label">Title of Mini Grant <span class="required">*</span></label>
-                    <input type="text" class="form-control" required>
+                 <div class="col-12">
+                   <label class="form-label">Title of Mini Grant <span class="required">*</span></label>
+                    <input type="text" class="form-control" name="grant_title" required>
                   </div>
                   <div class="col-12">
                     <label class="form-label">Summary of Mini Grant purpose <span class="required">*</span></label>
-                    <textarea class="form-control" rows="3" required></textarea>
+                    <textarea class="form-control" name="grant_summary" rows="3" required></textarea>
                   </div>
                   <div class="col-12">
                     <label class="form-label">Is this a classroom, grade level, department, school, or district initiative? <span class="required">*</span></label>
-                    <select class="form-select" required>
+                    <select class="form-select" name="initiative_scope" required>
                       <option value="">Select an option</option>
-                      <option>Classroom</option>
-                      <option>Grade Level</option>
-                      <option>Department</option>
-                      <option>School</option>
-                      <option>District</option>
+                      <option value="Classroom">Classroom</option>
+                      <option value="Grade Level">Grade Level</option>
+                      <option value="Department">Department</option>
+                      <option value="School">School</option>
+                      <option value="District">District</option>
                     </select>
                   </div>
                 </div>
               </div>
 
               <div class="form-section">
-                <h6>Scope of Mini Grant</h6>
+               <h6>Scope of Mini Grant</h6>
                 <p>Indicate which schools will be affected by the Mini Grant (check all that apply).</p>
                 <div class="row g-3">
                   <div class="col-md-4">
-                    <div class="form-check"><input class="form-check-input" type="checkbox" id="school-adamsville"><label class="form-check-label" for="school-adamsville">Adamsville</label></div>
-                    <div class="form-check"><input class="form-check-input" type="checkbox" id="school-bradley"><label class="form-check-label" for="school-bradley">Bradley Gardens</label></div>
-                    <div class="form-check"><input class="form-check-input" type="checkbox" id="school-crim"><label class="form-check-label" for="school-crim">Crim</label></div>
-                    <div class="form-check"><input class="form-check-input" type="checkbox" id="school-eisenhower"><label class="form-check-label" for="school-eisenhower">Eisenhower</label></div>
+                    <div class="form-check"><input class="form-check-input" type="checkbox" id="school-adamsville" name="schools" value="Adamsville"><label class="form-check-label" for="school-adamsville">Adamsville</label></div>
+                    <div class="form-check"><input class="form-check-input" type="checkbox" id="school-bradley" name="schools" value="Bradley Gardens"><label class="form-check-label" for="school-bradley">Bradley Gardens</label></div>
+                    <div class="form-check"><input class="form-check-input" type="checkbox" id="school-crim" name="schools" value="Crim"><label class="form-check-label" for="school-crim">Crim</label></div>
+                    <div class="form-check"><input class="form-check-input" type="checkbox" id="school-eisenhower" name="schools" value="Eisenhower"><label class="form-check-label" for="school-eisenhower">Eisenhower</label></div>
                   </div>
                   <div class="col-md-4">
-                    <div class="form-check"><input class="form-check-input" type="checkbox" id="school-hamilton"><label class="form-check-label" for="school-hamilton">Hamilton</label></div>
-                    <div class="form-check"><input class="form-check-input" type="checkbox" id="school-high"><label class="form-check-label" for="school-high">High School</label></div>
-                    <div class="form-check"><input class="form-check-input" type="checkbox" id="school-hillside"><label class="form-check-label" for="school-hillside">Hillside</label></div>
-                    <div class="form-check"><input class="form-check-input" type="checkbox" id="school-jfk"><label class="form-check-label" for="school-jfk">John F. Kennedy</label></div>
+                    <div class="form-check"><input class="form-check-input" type="checkbox" id="school-hamilton" name="schools" value="Hamilton"><label class="form-check-label" for="school-hamilton">Hamilton</label></div>
+                    <div class="form-check"><input class="form-check-input" type="checkbox" id="school-high" name="schools" value="High School"><label class="form-check-label" for="school-high">High School</label></div>
+                    <div class="form-check"><input class="form-check-input" type="checkbox" id="school-hillside" name="schools" value="Hillside"><label class="form-check-label" for="school-hillside">Hillside</label></div>
+                    <div class="form-check"><input class="form-check-input" type="checkbox" id="school-jfk" name="schools" value="John F. Kennedy"><label class="form-check-label" for="school-jfk">John F. Kennedy</label></div>
                   </div>
                   <div class="col-md-4">
-                    <div class="form-check"><input class="form-check-input" type="checkbox" id="school-middle"><label class="form-check-label" for="school-middle">Middle School</label></div>
-                    <div class="form-check"><input class="form-check-input" type="checkbox" id="school-milltown"><label class="form-check-label" for="school-milltown">Milltown</label></div>
-                    <div class="form-check"><input class="form-check-input" type="checkbox" id="school-vanholten"><label class="form-check-label" for="school-vanholten">Van Holten</label></div>
+                    <div class="form-check"><input class="form-check-input" type="checkbox" id="school-middle" name="schools" value="Middle School"><label class="form-check-label" for="school-middle">Middle School</label></div>
+                    <div class="form-check"><input class="form-check-input" type="checkbox" id="school-milltown" name="schools" value="Milltown"><label class="form-check-label" for="school-milltown">Milltown</label></div>
+                    <div class="form-check"><input class="form-check-input" type="checkbox" id="school-vanholten" name="schools" value="Van Holten"><label class="form-check-label" for="school-vanholten">Van Holten</label></div>
                   </div>
                   <div class="col-12">
                     <label class="form-label">How many students will directly benefit from this grant? <span class="required">*</span></label>
-                    <input type="number" class="form-control" required>
+                    <input type="number" class="form-control" name="students_benefit" required>
                   </div>
                 </div>
               </div>
@@ -335,43 +341,43 @@
                 <div class="row g-3">
                   <div class="col-md-2">
                     <label class="form-label">Prefix</label>
-                    <input type="text" class="form-control" placeholder="Mr., Ms., Dr.">
+                    <input type="text" class="form-control" name="contact_prefix" placeholder="Mr., Ms., Dr.">
                   </div>
                   <div class="col-md-5">
                     <label class="form-label">First <span class="required">*</span></label>
-                    <input type="text" class="form-control" required>
+                    <input type="text" class="form-control" name="contact_first_name" required>
                   </div>
                   <div class="col-md-5">
                     <label class="form-label">Last <span class="required">*</span></label>
-                    <input type="text" class="form-control" required>
+                    <input type="text" class="form-control" name="contact_last_name" required>
                   </div>
                   <div class="col-12">
                     <label class="form-label">Street Address <span class="required">*</span></label>
-                    <input type="text" class="form-control" required>
+                    <input type="text" class="form-control" name="contact_address" required>
                   </div>
                   <div class="col-md-5">
                     <label class="form-label">City <span class="required">*</span></label>
-                    <input type="text" class="form-control" required>
+                    <input type="text" class="form-control" name="contact_city" required>
                   </div>
                   <div class="col-md-4">
                     <label class="form-label">State <span class="required">*</span></label>
-                    <input type="text" class="form-control" value="New Jersey" required>
+                    <input type="text" class="form-control" name="contact_state" value="New Jersey" required>
                   </div>
                   <div class="col-md-3">
                     <label class="form-label">ZIP Code <span class="required">*</span></label>
-                    <input type="text" class="form-control" required>
+                    <input type="text" class="form-control" name="contact_zip" required>
                   </div>
                   <div class="col-md-6">
                     <label class="form-label">Phone number <span class="required">*</span></label>
-                    <input type="tel" class="form-control" required>
+                    <input type="tel" class="form-control" name="contact_phone" required>
                   </div>
                   <div class="col-md-6">
                     <label class="form-label">Email <span class="required">*</span></label>
-                    <input type="email" class="form-control" required>
+                    <input type="email" class="form-control" name="contact_email" required>
                   </div>
                   <div class="col-12">
                     <label class="form-label">Names and emails of additional Mini Grant co-applicants</label>
-                    <textarea class="form-control" rows="2"></textarea>
+                    <textarea class="form-control" name="co_applicants" rows="2"></textarea>
                   </div>
                 </div>
               </div>
@@ -381,19 +387,19 @@
                 <div class="row g-3">
                   <div class="col-12">
                     <label class="form-label">Total amount requested <span class="required">*</span></label>
-                    <input type="text" class="form-control" placeholder="Maximums: $750 classroom, $1,500 collaborative" required>
+                    <input type="text" class="form-control" name="amount_requested" placeholder="Maximums: $750 classroom, $1,500 collaborative" required>
                   </div>
                   <div class="col-12">
                     <label class="form-label">Describe how the money will be spent <span class="required">*</span></label>
-                    <textarea class="form-control" rows="4" placeholder="Include: Description of Item, Vendor, Item #, Unit Cost, Quantity, and Item Total." required></textarea>
+                    <textarea class="form-control" name="budget_description" rows="4" placeholder="Include: Description of Item, Vendor, Item #, Unit Cost, Quantity, and Item Total." required></textarea>
                   </div>
                   <div class="col-md-6">
                     <label class="form-label">Anticipated Start Date of Mini Grant <span class="required">*</span></label>
-                    <input type="date" class="form-control" required>
+                    <input type="date" class="form-control" name="start_date" required>
                   </div>
                   <div class="col-md-6">
                     <label class="form-label">Expected length of Mini Grant <span class="required">*</span></label>
-                    <input type="text" class="form-control" placeholder="MM/DD/YYYY - MM/DD/YYYY" required>
+                    <input type="text" class="form-control" name="expected_length" placeholder="MM/DD/YYYY - MM/DD/YYYY" required>
                   </div>
                 </div>
               </div>
@@ -401,22 +407,22 @@
               <div class="form-section">
                 <h6>Core Principles</h6>
                 <p>Which core principles does the Mini Grant fall under? (check all that apply)</p>
-                <div class="row g-2">
+               <div class="row g-2">
                   <div class="col-md-6">
-                    <div class="form-check"><input class="form-check-input" type="checkbox" id="core-cultural"><label class="form-check-label" for="core-cultural">Cultural Enrichment</label></div>
+                    <div class="form-check"><input class="form-check-input" type="checkbox" id="core-cultural" name="core_principles" value="Cultural Enrichment"><label class="form-check-label" for="core-cultural">Cultural Enrichment</label></div>
                   </div>
                   <div class="col-md-6">
-                    <div class="form-check"><input class="form-check-input" type="checkbox" id="core-tech"><label class="form-check-label" for="core-tech">Technology and Learning</label></div>
+                    <div class="form-check"><input class="form-check-input" type="checkbox" id="core-tech" name="core_principles" value="Technology and Learning"><label class="form-check-label" for="core-tech">Technology and Learning</label></div>
                   </div>
                   <div class="col-md-6">
-                    <div class="form-check"><input class="form-check-input" type="checkbox" id="core-arts"><label class="form-check-label" for="core-arts">Arts and Education</label></div>
+                    <div class="form-check"><input class="form-check-input" type="checkbox" id="core-arts" name="core_principles" value="Arts and Education"><label class="form-check-label" for="core-arts">Arts and Education</label></div>
                   </div>
                   <div class="col-md-6">
-                    <div class="form-check"><input class="form-check-input" type="checkbox" id="core-scholastic"><label class="form-check-label" for="core-scholastic">Scholastic Enhancement / Professional Development</label></div>
+                    <div class="form-check"><input class="form-check-input" type="checkbox" id="core-scholastic" name="core_principles" value="Scholastic Enhancement / Professional Development"><label class="form-check-label" for="core-scholastic">Scholastic Enhancement / Professional Development</label></div>
                   </div>
                   <div class="col-12">
                     <label class="form-label">Explain the relationship of the Mini Grant's purpose to the Foundation's core principles <span class="required">*</span></label>
-                    <textarea class="form-control" rows="3" required></textarea>
+                    <textarea class="form-control" name="core_principles_explanation" rows="3" required></textarea>
                   </div>
                 </div>
               </div>
@@ -426,18 +432,18 @@
                 <div class="row g-3">
                   <div class="col-12">
                     <label class="form-label">Will you be able to provide pictures, a grant impact summary, and a short video of the Mini Grant's successes? <span class="required">*</span></label>
-                    <div class="form-check"><input class="form-check-input" type="radio" name="provide-media" id="provide-media-yes" required><label class="form-check-label" for="provide-media-yes">Yes</label></div>
-                    <div class="form-check"><input class="form-check-input" type="radio" name="provide-media" id="provide-media-no" required><label class="form-check-label" for="provide-media-no">No</label></div>
+                    <div class="form-check"><input class="form-check-input" type="radio" name="provide_media" id="provide-media-yes" value="yes" required><label class="form-check-label" for="provide-media-yes">Yes</label></div>
+                    <div class="form-check"><input class="form-check-input" type="radio" name="provide_media" id="provide-media-no" value="no" required><label class="form-check-label" for="provide-media-no">No</label></div>
                   </div>
                   <div class="col-12">
                     <label class="form-label">Is the project contingent upon receiving additional outside funding? <span class="required">*</span></label>
-                    <div class="form-check"><input class="form-check-input" type="radio" name="outside-funding" id="outside-funding-yes" required><label class="form-check-label" for="outside-funding-yes">Yes</label></div>
-                    <div class="form-check"><input class="form-check-input" type="radio" name="outside-funding" id="outside-funding-no" required><label class="form-check-label" for="outside-funding-no">No</label></div>
+                    <div class="form-check"><input class="form-check-input" type="radio" name="outside_funding" id="outside-funding-yes" value="yes" required><label class="form-check-label" for="outside-funding-yes">Yes</label></div>
+                    <div class="form-check"><input class="form-check-input" type="radio" name="outside_funding" id="outside-funding-no" value="no" required><label class="form-check-label" for="outside-funding-no">No</label></div>
                   </div>
                   <div class="col-12">
                     <label class="form-label">Have the building Principal(s) approved of this Mini Grant? <span class="required">*</span></label>
-                    <div class="form-check"><input class="form-check-input" type="radio" name="principal-approval" id="principal-approval-yes" required><label class="form-check-label" for="principal-approval-yes">Yes</label></div>
-                    <div class="form-check"><input class="form-check-input" type="radio" name="principal-approval" id="principal-approval-no" required><label class="form-check-label" for="principal-approval-no">No</label></div>
+                    <div class="form-check"><input class="form-check-input" type="radio" name="principal_approval" id="principal-approval-yes" value="yes" required><label class="form-check-label" for="principal-approval-yes">Yes</label></div>
+                    <div class="form-check"><input class="form-check-input" type="radio" name="principal_approval" id="principal-approval-no" value="no" required><label class="form-check-label" for="principal-approval-no">No</label></div>
                   </div>
                 </div>
               </div>
@@ -465,7 +471,8 @@
               </div>
 
               <div class="form-actions">
-                <button type="button" class="grants-btn">Submit Application (Template)</button>
+               <!-- note: submit button stays disabled to avoid real sends -->
+                <button type="submit" class="grants-btn">Submit Application (Template)</button>
                 <p class="form-note">Template only. Submission will be enabled later.</p>
               </div>
             </form>
@@ -477,70 +484,69 @@
   </main>
 
 
-  <footer id="footer" class="footer">
+    <footer id="footer" class="footer">
 
     <div class="container footer-top">
       <div class="row gy-4">
-        <div class="col-lg-4 col-md-6 footer-about">
+        <div class="col-lg-3 col-md-6 footer-about">
           <a href="/" class="logo d-flex align-items-center">
             <span class="sitename">Education Foundation of BR</span>
           </a>
+          <p>Supporting Bridgewater-Raritan students through grants, scholarships, and community partnerships.</p>
           <div class="footer-contact pt-3">
-            <p>A108 Adam Street</p>
-            <p>New York, NY 535022</p>
-            <p class="mt-3"><strong>Phone:</strong> <span>+1 5589 55488 55</span></p>
-            <p><strong>Email:</strong> <span>info@example.com</span></p>
+            <p><strong>Mailing Address</strong></p>
+            <p>P. O. Box 6044<br>Bridgewater, NJ 08807</p>
           </div>
-          <div class="social-links d-flex mt-4">
-            <a href=""><i class="bi bi-twitter-x"></i></a>
-            <a href=""><i class="bi bi-facebook"></i></a>
-            <a href=""><i class="bi bi-instagram"></i></a>
-            <a href=""><i class="bi bi-linkedin"></i></a>
+          <div class="social-links d-flex mt-3">
+            <a href="https://www.facebook.com/BRRSDEdFound/" aria-label="Facebook"><i class="bi bi-facebook"></i></a>
+            <a href="https://twitter.com/BRRSD_EdFound" aria-label="Twitter"><i class="bi bi-twitter-x"></i></a>
           </div>
         </div>
 
-        <div class="col-lg-2 col-md-3 footer-links">
-          <h4>Useful Links</h4>
+        <div class="col-lg-2 col-md-6 footer-links">
+          <h4>Foundation</h4>
           <ul>
-            <li><a href="/">Home</a></li>
-            <li><a href="/support-us/">Support Us</a></li>
-            <li><a href="/golf-outing/">Golf Outing</a></li>
-            <li><a href="/grants/">Grants</a></li>
+            <li><a href="/about-us/">About Us</a></li>
+            <li><a href="/trustees/">Trustees</a></li>
+            <li><a href="/faq/">FAQ</a></li>
+            <li><a href="https://edfoundbr.org/category/news/" target="_blank" rel="noopener">News</a></li>
             <li><a href="/contact/">Contact</a></li>
           </ul>
         </div>
 
-        <div class="col-lg-2 col-md-3 footer-links">
-          <h4>Our Services</h4>
+        <div class="col-lg-2 col-md-6 footer-links">
+          <h4>Programs</h4>
           <ul>
-            <li><a href="#">Web Design</a></li>
-            <li><a href="#">Web Development</a></li>
-            <li><a href="#">Product Management</a></li>
-            <li><a href="#">Marketing</a></li>
-            <li><a href="#">Graphic Design</a></li>
+            <li><a href="/grants/">Grants</a></li>
+            <li><a href="/grant-recipients/">Grant Recipients</a></li>
+            <li><a href="https://edfoundbr.org/grants/mini-grant-application/" target="_blank" rel="noopener">Mini-Grant Application</a></li>
+            <li><a href="https://edfoundbr.org/service-awards/" target="_blank" rel="noopener">Service Awards</a></li>
+            <li><a href="/golf-outing/">Golf Outing</a></li>
           </ul>
         </div>
 
-        <div class="col-lg-2 col-md-3 footer-links">
-          <h4>Hic solutasetp</h4>
+        <div class="col-lg-2 col-md-6 footer-links">
+          <h4>Get Involved</h4>
           <ul>
-            <li><a href="#">Molestiae accusamus iure</a></li>
-            <li><a href="#">Excepturi dignissimos</a></li>
-            <li><a href="#">Suscipit distinctio</a></li>
-            <li><a href="#">Dilecta</a></li>
-            <li><a href="#">Sit quas consectetur</a></li>
+            <li><a href="/support-us/">Support Us</a></li>
+            <li><a href="/support-us/#donate">Donate</a></li>
+            <li><a href="/support-us/#ways">Ways to Help</a></li>
+            <li><a href="/support-us/#mailing-list">Mailing List</a></li>
+            <li><a href="https://edfoundbr.org/how-to-help/" target="_blank" rel="noopener">How to Help</a></li>
           </ul>
         </div>
 
-        <div class="col-lg-2 col-md-3 footer-links">
-          <h4>Nobis illum</h4>
-          <ul>
-            <li><a href="#">Ipsam</a></li>
-            <li><a href="#">Laudantium dolorum</a></li>
-            <li><a href="#">Dinera</a></li>
-            <li><a href="#">Trodelas</a></li>
-            <li><a href="#">Flexo</a></li>
-          </ul>
+        <div class="col-lg-3 col-md-6 footer-newsletter">
+          <h4>Stay Informed</h4>
+          <p>Get event updates, grant news, and community stories in your inbox.</p>
+          <form class="footer-newsletter-form" data-form-service="mailchimp" data-form-name="footer_newsletter">
+            <input type="email" class="form-control" name="EMAIL" placeholder="Email address" autocomplete="email" required>
+            <button type="submit" class="btn-subscribe">Join</button>
+          </form>
+          <p class="footer-newsletter-note">We respect your inbox. Unsubscribe anytime.</p>
+          <p class="footer-newsletter-link">
+            <a href="https://edfoundbr.org/stay-informed/" target="_blank" rel="noopener">Official Stay Informed page</a>
+          </p>
         </div>
 
       </div>
@@ -548,9 +554,6 @@
 
     <div class="container copyright text-center mt-4">
       <p>© <span>Education Foundation of Bridgewater-Raritan</span> <span>All Rights Reserved</span></p>
-      <div class="footer-contact mt-2">
-        <p>P. O. Box 6044<br>Bridgewater, NJ 08807</p>
-      </div>
     </div>
 
   </footer>

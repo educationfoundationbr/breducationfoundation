@@ -6,7 +6,7 @@
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
   <title>Golf Outing | Education Foundation of Bridgewater-Raritan</title>
 
-  <link href="../assets/img/education/favicon.png" rel="icon">
+  <link href="../assets/img/favicon.png" rel="icon">
   <link href="../assets/img/apple-touch-icon.png" rel="apple-touch-icon">
 
   <link href="https://fonts.googleapis.com" rel="preconnect">
@@ -24,6 +24,7 @@
 </head>
 
 <body class="golf-outing-page">
+ <!-- todo: confirm event date/time with committee -->
 
   <header id="header" class="header d-flex align-items-center fixed-top">
     <div class="header-container container-fluid container-xl position-relative d-flex align-items-center justify-content-between">
@@ -66,6 +67,7 @@
         <div class="row align-items-center g-5">
           <div class="col-lg-6" data-aos="fade-right">
             <span class="golf-eyebrow">Next Event</span>
+           <!-- todo: verify venue line once contract is signed -->
             <h1 class="golf-title">Third Annual Golf Outing</h1>
             <p class="golf-lead">Bring your friends or register as an individual for the Education Foundation of Bridgewater-Raritan Golf Outing. Registration includes a relaxing BBQ dinner with beer and wine after your outing. Not a golfer? You can still join us (or your favorite golfer) afterwards for the BBQ Dinner. Sponsor a hole to support the cause and get your business recognized.</p>
 
@@ -94,6 +96,7 @@
             </div>
 
             <div class="golf-actions">
+             <!-- note: consider adding a "Donate" link here -->
               <a href="#registration" class="golf-btn">Register for Golf</a>
               <a href="#sponsorship" class="golf-btn-outline">Sponsor a Hole</a>
               <a href="#bbq" class="golf-link">BBQ Dinner Only</a>
@@ -102,15 +105,7 @@
 
           <div class="col-lg-6" data-aos="fade-left">
             <div class="golf-flyer">
-              <img src="../golf.png" alt="Golf Outing Flyer">
-              <div class="flyer-badges">
-                <div class="flyer-badge badge-1"><i class="bi bi-calendar-event"></i><span>Thu, Jul 9 2026</span></div>
-                <div class="flyer-badge badge-2"><i class="bi bi-clock"></i><span>Shotgun start Noon</span></div>
-                <div class="flyer-badge badge-3"><i class="bi bi-geo-alt"></i><span>Fox Hollow Golf Club</span></div>
-                <div class="flyer-badge badge-4"><i class="bi bi-pin-map"></i><span>Branchburg, NJ</span></div>
-                <div class="flyer-badge badge-5"><i class="bi bi-cup-hot"></i><span>BBQ Dinner + Beer &amp; Wine</span></div>
-                <div class="flyer-badge badge-6"><i class="bi bi-award"></i><span>Sponsor a Hole</span></div>
-              </div>
+              <img src="../assets/img/golf.png" alt="Golf Outing Flyer">
             </div>
           </div>
         </div>
@@ -118,6 +113,7 @@
     </section>
 
     <section id="sponsorship" class="golf-sponsorship section light-background">
+     <!-- reminder: sponsorship tiers might shift before launch -->
       <div class="container">
         <div class="section-title text-start" data-aos="fade-up">
           <span class="golf-eyebrow">Golf Sponsorship Overview</span>
@@ -125,8 +121,8 @@
           <p>We look forward to enjoying a great day out while supporting innovative projects and programs for Bridgewater-Raritan students.</p>
         </div>
 
-        <div class="row g-4 align-items-start">
-          <div class="col-lg-7" data-aos="fade-up">
+        <div class="row g-4">
+         <div class="col-lg-7" data-aos="fade-up">
             <div class="golf-summary-card">
               <h3>Golf Event Summary</h3>
               <p>Bring your friends or register as an individual for the Education Foundation of Bridgewater-Raritan Golf Outing. Registration includes a relaxing BBQ dinner with beer and wine after your outing. Not a golfer? You can still join us afterwards for the BBQ Dinner. Sponsor a hole to support the cause and get your business recognized.</p>
@@ -134,6 +130,8 @@
                 <li><strong>Date &amp; Time:</strong> Thursday, July 9, 2026 with shotgun start at Noon.</li>
                 <li><strong>Where:</strong> Fox Hollow Golf Club | Branchburg, NJ.</li>
                 <li><strong>Includes:</strong> BBQ dinner with beer and wine for participants.</li>
+                <li><strong>Golf + Dinner:</strong> $150 per golfer.</li>
+                <li><strong>BBQ Dinner Only:</strong> $65 per person.</li>
               </ul>
             </div>
           </div>
@@ -142,10 +140,10 @@
             <div class="golf-sponsor-card">
               <h3>Sponsorship Price Levels</h3>
               <ul class="sponsor-levels">
-                <li><span>$500 - $10K</span><span>Hole-in-One Sponsor</span></li>
-                <li><span>$100</span><span>3 Hole Sponsor</span></li>
-                <li><span>$50</span><span>1 Hole Sponsor</span></li>
-                <li><span>$50 - $500</span><span>Golf Sponsor Range</span></li>
+                <li><span class="level-price">$500 - $10K</span><span class="level-name">Hole-in-One Sponsor (custom)</span></li>
+                <li><span class="level-price">$100</span><span class="level-name">3 Hole Sponsor</span></li>
+                <li><span class="level-price">$50</span><span class="level-name">1 Hole Sponsor</span></li>
+                <li><span class="level-price">$50 - $500</span><span class="level-name">Golf Sponsor Range (custom)</span></li>
               </ul>
               <p class="sponsor-note">Once payment is submitted, a member of the Education Foundation will reach out for your desired logo and wording.</p>
             </div>
@@ -153,6 +151,7 @@
         </div>
 
         <div id="registration" class="row g-4 mt-4">
+         <!-- note: pricing text ties to JS total calc -->
           <div class="col-lg-6" data-aos="fade-up">
             <div class="golf-pay-card">
               <div class="pay-card-head">
@@ -162,32 +161,41 @@
                 </div>
                 <span class="pay-badge">PayPal</span>
               </div>
-              <form class="pay-form">
+              <div class="pay-summary">
+                <div>
+                  <span class="summary-label">Total due</span>
+                  <strong class="summary-value" id="golf-total">$150</strong>
+                </div>
+                <span class="summary-note" id="golf-unit">$150 per registrant</span>
+              </div>
+              <form class="pay-form" data-form-service="gcloud" data-form-name="golf_registration">
+                <input type="hidden" id="golf-amount" name="golf_amount" value="150">
                 <div class="row g-3">
-                  <div class="col-12">
+                 <div class="col-12">
                     <label class="form-label">Registration Type</label>
-                    <select class="form-select">
-                      <option>Golfer Registration</option>
-                      <option>Individual Registration</option>
-                      <option>Dinner Only (BBQ + Drinks)</option>
+                    <select class="form-select" id="golf-registration-type" name="registration_type">
+                      <option value="Golfer Registration" data-price="150" data-unit="per golfer" selected>Golfer Registration - $150</option>
+                      <option value="Individual Registration" data-price="150" data-unit="per golfer">Individual Registration - $150</option>
+                      <option value="Dinner Only (BBQ + Drinks)" data-price="65" data-unit="per person">Dinner Only (BBQ + Drinks) - $65</option>
                     </select>
                   </div>
-                  <div class="col-6">
+                 <div class="col-6">
                     <label class="form-label">Quantity</label>
-                    <input type="number" class="form-control" value="1" min="1">
+                    <input type="number" class="form-control" name="quantity" value="1" min="1" id="golf-registration-qty">
                   </div>
                   <div class="col-6">
-                    <label class="form-label">Email</label>
-                    <input type="email" class="form-control" placeholder="you@email.com">
+                   <label class="form-label">Email</label>
+                    <input type="email" class="form-control" name="email" placeholder="you@email.com">
                   </div>
                 </div>
-                <button type="button" class="golf-btn">Pay with PayPal</button>
+                <button type="submit" class="golf-btn">Pay with PayPal</button>
+               <!-- reminder: template only for now -->
                 <p class="pay-note">Template only. Payment processing will be enabled later.</p>
               </form>
             </div>
           </div>
 
-          <div class="col-lg-6" data-aos="fade-up" data-aos-delay="150">
+         <div class="col-lg-6" data-aos="fade-up" data-aos-delay="150">
             <div class="golf-pay-card">
               <div class="pay-card-head">
                 <div>
@@ -196,27 +204,43 @@
                 </div>
                 <span class="pay-badge">PayPal</span>
               </div>
-              <form class="pay-form">
+              <div class="pay-summary">
+                <div>
+                  <span class="summary-label">Amount due</span>
+                  <strong class="summary-value" id="sponsor-total">$500</strong>
+                </div>
+                <span class="summary-note">Adjust the amount below for custom sponsorships.</span>
+              </div>
+              <form class="pay-form" data-form-service="gcloud" data-form-name="golf_sponsorship">
+                <input type="hidden" id="sponsor-amount-hidden" name="sponsor_amount_total" value="500">
                 <div class="row g-3">
                   <div class="col-12">
                     <label class="form-label">Sponsorship Level</label>
-                    <select class="form-select">
-                      <option>$500 - $10K Hole-in-One Sponsor</option>
-                      <option>$100 - 3 Hole Sponsor</option>
-                      <option>$50 - 1 Hole Sponsor</option>
-                      <option>$50 - $500 Custom Sponsorship</option>
+                    <select class="form-select" id="sponsor-level" name="sponsor_level">
+                      <option value="Hole-in-One Sponsor" data-amount="500" selected>Hole-in-One Sponsor (Custom $500 - $10,000)</option>
+                      <option value="3 Hole Sponsor" data-amount="100">3 Hole Sponsor - $100</option>
+                      <option value="1 Hole Sponsor" data-amount="50">1 Hole Sponsor - $50</option>
+                      <option value="Golf Sponsor Range" data-amount="50">Golf Sponsor Range (Custom $50 - $500)</option>
                     </select>
                   </div>
                   <div class="col-12">
+                    <label class="form-label">Sponsorship Amount</label>
+                    <div class="input-group">
+                      <span class="input-group-text">$</span>
+                      <input type="number" class="form-control" id="sponsor-amount" name="sponsor_amount" min="50" step="1" value="500">
+                    </div>
+                    <p class="form-hint">Enter the amount that matches your sponsorship level.</p>
+                  </div>
+                  <div class="col-12">
                     <label class="form-label">Organization Name</label>
-                    <input type="text" class="form-control" placeholder="Company or family name">
+                    <input type="text" class="form-control" name="organization_name" placeholder="Company or family name">
                   </div>
                   <div class="col-12">
                     <label class="form-label">Contact Email</label>
-                    <input type="email" class="form-control" placeholder="you@email.com">
+                    <input type="email" class="form-control" name="contact_email" placeholder="you@email.com">
                   </div>
                 </div>
-                <button type="button" class="golf-btn">Pay with PayPal</button>
+                <button type="submit" class="golf-btn">Pay with PayPal</button>
                 <p class="pay-note">Template only. Payment processing will be enabled later.</p>
               </form>
             </div>
@@ -248,18 +272,20 @@
                 <span class="pay-badge">PayPal</span>
               </div>
               <div class="bbq-price">$65.00</div>
-              <form class="pay-form">
+              <form class="pay-form" data-form-service="gcloud" data-form-name="golf_bbq">
+                <input type="hidden" name="bbq_unit_price" value="65">
                 <div class="row g-3">
                   <div class="col-6">
                     <label class="form-label">Quantity</label>
-                    <input type="number" class="form-control" value="1" min="1">
+                    <input type="number" class="form-control" name="quantity" value="1" min="1">
                   </div>
                   <div class="col-6">
                     <label class="form-label">Email</label>
-                    <input type="email" class="form-control" placeholder="you@email.com">
+                    <input type="email" class="form-control" name="email" placeholder="you@email.com">
                   </div>
                 </div>
-                <button type="button" class="golf-btn">Add to Cart</button>
+                <button type="submit" class="golf-btn">Add to Cart</button>
+               <!-- reminder: still template copy -->
                 <p class="pay-note">Template only. Payment processing will be enabled later.</p>
               </form>
             </div>
@@ -271,70 +297,69 @@
   </main>
 
 
-  <footer id="footer" class="footer">
+    <footer id="footer" class="footer">
 
     <div class="container footer-top">
       <div class="row gy-4">
-        <div class="col-lg-4 col-md-6 footer-about">
+        <div class="col-lg-3 col-md-6 footer-about">
           <a href="/" class="logo d-flex align-items-center">
             <span class="sitename">Education Foundation of BR</span>
           </a>
+          <p>Supporting Bridgewater-Raritan students through grants, scholarships, and community partnerships.</p>
           <div class="footer-contact pt-3">
-            <p>A108 Adam Street</p>
-            <p>New York, NY 535022</p>
-            <p class="mt-3"><strong>Phone:</strong> <span>+1 5589 55488 55</span></p>
-            <p><strong>Email:</strong> <span>info@example.com</span></p>
+            <p><strong>Mailing Address</strong></p>
+            <p>P. O. Box 6044<br>Bridgewater, NJ 08807</p>
           </div>
-          <div class="social-links d-flex mt-4">
-            <a href=""><i class="bi bi-twitter-x"></i></a>
-            <a href=""><i class="bi bi-facebook"></i></a>
-            <a href=""><i class="bi bi-instagram"></i></a>
-            <a href=""><i class="bi bi-linkedin"></i></a>
+          <div class="social-links d-flex mt-3">
+            <a href="https://www.facebook.com/BRRSDEdFound/" aria-label="Facebook"><i class="bi bi-facebook"></i></a>
+            <a href="https://twitter.com/BRRSD_EdFound" aria-label="Twitter"><i class="bi bi-twitter-x"></i></a>
           </div>
         </div>
 
-        <div class="col-lg-2 col-md-3 footer-links">
-          <h4>Useful Links</h4>
+        <div class="col-lg-2 col-md-6 footer-links">
+          <h4>Foundation</h4>
           <ul>
-            <li><a href="/">Home</a></li>
-            <li><a href="/support-us/">Support Us</a></li>
-            <li><a href="/golf-outing/">Golf Outing</a></li>
-            <li><a href="/grants/">Grants</a></li>
+            <li><a href="/about-us/">About Us</a></li>
+            <li><a href="/trustees/">Trustees</a></li>
+            <li><a href="/faq/">FAQ</a></li>
+            <li><a href="https://edfoundbr.org/category/news/" target="_blank" rel="noopener">News</a></li>
             <li><a href="/contact/">Contact</a></li>
           </ul>
         </div>
 
-        <div class="col-lg-2 col-md-3 footer-links">
-          <h4>Our Services</h4>
+        <div class="col-lg-2 col-md-6 footer-links">
+          <h4>Programs</h4>
           <ul>
-            <li><a href="#">Web Design</a></li>
-            <li><a href="#">Web Development</a></li>
-            <li><a href="#">Product Management</a></li>
-            <li><a href="#">Marketing</a></li>
-            <li><a href="#">Graphic Design</a></li>
+            <li><a href="/grants/">Grants</a></li>
+            <li><a href="/grant-recipients/">Grant Recipients</a></li>
+            <li><a href="https://edfoundbr.org/grants/mini-grant-application/" target="_blank" rel="noopener">Mini-Grant Application</a></li>
+            <li><a href="https://edfoundbr.org/service-awards/" target="_blank" rel="noopener">Service Awards</a></li>
+            <li><a href="/golf-outing/">Golf Outing</a></li>
           </ul>
         </div>
 
-        <div class="col-lg-2 col-md-3 footer-links">
-          <h4>Hic solutasetp</h4>
+        <div class="col-lg-2 col-md-6 footer-links">
+          <h4>Get Involved</h4>
           <ul>
-            <li><a href="#">Molestiae accusamus iure</a></li>
-            <li><a href="#">Excepturi dignissimos</a></li>
-            <li><a href="#">Suscipit distinctio</a></li>
-            <li><a href="#">Dilecta</a></li>
-            <li><a href="#">Sit quas consectetur</a></li>
+            <li><a href="/support-us/">Support Us</a></li>
+            <li><a href="/support-us/#donate">Donate</a></li>
+            <li><a href="/support-us/#ways">Ways to Help</a></li>
+            <li><a href="/support-us/#mailing-list">Mailing List</a></li>
+            <li><a href="https://edfoundbr.org/how-to-help/" target="_blank" rel="noopener">How to Help</a></li>
           </ul>
         </div>
 
-        <div class="col-lg-2 col-md-3 footer-links">
-          <h4>Nobis illum</h4>
-          <ul>
-            <li><a href="#">Ipsam</a></li>
-            <li><a href="#">Laudantium dolorum</a></li>
-            <li><a href="#">Dinera</a></li>
-            <li><a href="#">Trodelas</a></li>
-            <li><a href="#">Flexo</a></li>
-          </ul>
+        <div class="col-lg-3 col-md-6 footer-newsletter">
+          <h4>Stay Informed</h4>
+          <p>Get event updates, grant news, and community stories in your inbox.</p>
+          <form class="footer-newsletter-form" data-form-service="mailchimp" data-form-name="footer_newsletter">
+            <input type="email" class="form-control" name="EMAIL" placeholder="Email address" autocomplete="email" required>
+            <button type="submit" class="btn-subscribe">Join</button>
+          </form>
+          <p class="footer-newsletter-note">We respect your inbox. Unsubscribe anytime.</p>
+          <p class="footer-newsletter-link">
+            <a href="https://edfoundbr.org/stay-informed/" target="_blank" rel="noopener">Official Stay Informed page</a>
+          </p>
         </div>
 
       </div>
@@ -342,9 +367,6 @@
 
     <div class="container copyright text-center mt-4">
       <p>© <span>Education Foundation of Bridgewater-Raritan</span> <span>All Rights Reserved</span></p>
-      <div class="footer-contact mt-2">
-        <p>P. O. Box 6044<br>Bridgewater, NJ 08807</p>
-      </div>
     </div>
 
   </footer>

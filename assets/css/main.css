@@ -6,6 +6,7 @@
   --default-font: "Poppins", system-ui, -apple-system, "Segoe UI", "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
   --heading-font: "Raleway", sans-serif;
   --nav-font: "Poppins", sans-serif;
+  /* note: fonts loaded via Google Fonts in HTML head */
 }
 
 /* Global Colors - The following color variables are used throughout the website. Updating them here will change the color scheme of the entire website */
@@ -17,6 +18,7 @@
   --surface-color: #ffffff; /* The surface color is used as a background of boxed elements within sections, such as cards, icon boxes, or other elements that require a visual separation from the global background. */
   --contrast-color: #ffffff; /* Contrast color for text, ensuring readability against backgrounds of accent, heading, or default colors. */
   --header-offset: 96px;
+  /* todo: tweak header offset if hero spacing shifts */
 }
 
 /* Nav Menu Colors - The following color variables are used specifically for the navigation menu. They are separate from the global colors to allow for more customization options */
@@ -48,6 +50,7 @@
   --heading-color: #ffffff;
   --surface-color: #1d1d1d;
   --contrast-color: #ffffff;
+  /* note: keep dark sections minimal for readability */
 }
 
 /* Smooth scroll */
@@ -61,7 +64,7 @@
 body {
   color: var(--default-color);
   background-color: var(--background-color);
-  font-family: var(--default-font);
+ font-family: var(--default-font);
 }
 
 main,
@@ -76,18 +79,19 @@ body:not(.index-page) .main {
 
 body.support-us-page main,
 body.support-us-page .main {
-  padding-top: 0;
+ padding-top: 0;
 }
 
 a {
   color: var(--accent-color);
   text-decoration: none;
-  transition: 0.3s;
+ transition: 0.3s;
 }
 
 a:hover {
   color: color-mix(in srgb, var(--accent-color), transparent 25%);
   text-decoration: none;
+  /* note: hover color is slightly softer */
 }
 
 h1,
@@ -98,6 +102,7 @@ h5,
 h6 {
   color: var(--heading-color);
   font-family: var(--heading-font);
+  /* todo: adjust heading weight after final logo */
 }
 
 /* PHP Email Form Messages
@@ -163,6 +168,7 @@ h6 {
   transition: all 0.5s;
   z-index: 997;
 }
+/* remember: header might need more contrast once logo is final */
 
 .header .header-container {
   background: var(--surface-color);
@@ -170,6 +176,7 @@ h6 {
   padding: 5px 25px;
   box-shadow: 0px 2px 15px rgba(0, 0, 0, 0.1);
 }
+/* note: keep header pill shape unless logo size changes */
 
 .scrolled .header .header-container {
   background: color-mix(in srgb, var(--surface-color), transparent 5%);
@@ -575,6 +582,57 @@ h6 {
   margin-bottom: 5px;
 }
 
+.footer .footer-newsletter {
+  margin-bottom: 30px;
+}
+
+.footer .footer-newsletter-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.footer .footer-newsletter-form .form-control {
+  flex: 1 1 200px;
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--default-color), transparent 70%);
+  background-color: var(--surface-color);
+  padding: 10px 14px;
+}
+
+.footer .btn-subscribe {
+  border: none;
+  background: var(--accent-color);
+  color: var(--contrast-color);
+  padding: 10px 18px;
+  border-radius: 999px;
+  font-weight: 600;
+  transition: 0.3s;
+}
+
+.footer .btn-subscribe:hover {
+  background: color-mix(in srgb, var(--accent-color), transparent 15%);
+}
+
+.footer .footer-newsletter-note {
+  margin-top: 8px;
+  font-size: 12px;
+  color: color-mix(in srgb, var(--default-color), transparent 40%);
+}
+
+.footer .footer-newsletter-link {
+  margin-top: 10px;
+}
+
+.footer .footer-newsletter-link a {
+  color: color-mix(in srgb, var(--default-color), transparent 30%);
+}
+
+.footer .footer-newsletter-link a:hover {
+  color: var(--accent-color);
+}
+
 .footer .copyright {
   padding: 25px 0;
   border-top: 1px solid color-mix(in srgb, var(--default-color), transparent 90%);
@@ -587,6 +645,24 @@ h6 {
 .footer .credits {
   margin-top: 8px;
   font-size: 13px;
+}
+
+.form-status {
+  margin-top: 12px;
+  font-size: 0.9rem;
+  color: color-mix(in srgb, var(--default-color), transparent 35%);
+}
+
+.form-status.is-success {
+  color: #1f7a4d;
+}
+
+.form-status.is-error {
+  color: #b42318;
+}
+
+.form-status.is-pending {
+  color: color-mix(in srgb, var(--default-color), transparent 20%);
 }
 
 /*--------------------------------------------------------------
@@ -1347,10 +1423,10 @@ section,
   right: 5%;
   background-color: var(--accent-color);
   color: var(--contrast-color);
-  padding: 1.5rem;
+  padding: 1.25rem 1.5rem;
   border-radius: 0.5rem;
   text-align: center;
-  min-width: 200px;
+  min-width: 220px;
   animation: experience-float 3s ease-in-out infinite;
 }
 
@@ -1364,15 +1440,15 @@ section,
 
 .about .image-wrapper .experience-badge h3 {
   color: var(--contrast-color);
-  font-size: 2.5rem;
+  font-size: 1.8rem;
   margin: 0;
-  line-height: 0.5;
+  line-height: 1.1;
 }
 
 .about .image-wrapper .experience-badge h3 span {
-  font-size: 1rem;
+  font-size: inherit;
   display: inline-block;
-  margin-left: 0.25rem;
+  margin-left: 0;
 }
 
 .about .image-wrapper .experience-badge p {
@@ -2753,16 +2829,23 @@ section,
   gap: 16px;
   height: 100%;
   box-shadow: 0 18px 30px -24px color-mix(in srgb, var(--default-color), transparent 75%);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.trustees-page .trustees-list .trustee-card:hover {
+  transform: translateY(-4px);
+  border-color: color-mix(in srgb, var(--accent-color), transparent 60%);
+  box-shadow: 0 26px 40px -28px color-mix(in srgb, var(--default-color), transparent 70%);
 }
 
 .trustees-page .trustee-avatar {
-  width: 120px;
-  height: 120px;
+  width: 96px;
+  height: 96px;
   border-radius: 16px;
   background: linear-gradient(135deg, color-mix(in srgb, var(--accent-color), transparent 85%), #ffffff);
   border: 1px solid color-mix(in srgb, var(--accent-color), transparent 70%);
   color: color-mix(in srgb, var(--default-color), transparent 40%);
-  font-size: 0.75rem;
+  font-size: 0.7rem;
   font-weight: 600;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -2789,8 +2872,8 @@ section,
 
 @media (max-width: 575px) {
   .trustees-page .trustee-avatar {
-    width: 96px;
-    height: 96px;
+    width: 80px;
+    height: 80px;
   }
 }
 
@@ -3010,6 +3093,24 @@ section,
   z-index: 1;
 }
 
+.support-us-page .donate-section .row {
+  align-items: stretch;
+}
+
+.support-us-page .donate-section .col-lg-7 {
+  display: flex;
+  flex-direction: column;
+}
+
+.support-us-page .donate-copy {
+  background: var(--surface-color);
+  border: 1px solid color-mix(in srgb, var(--default-color), transparent 88%);
+  border-radius: 20px;
+  padding: 24px;
+  box-shadow: 0 24px 40px -30px color-mix(in srgb, var(--default-color), transparent 70%);
+  margin-bottom: 20px;
+}
+
 .support-us-page .donate-copy h2 {
   margin-bottom: 16px;
 }
@@ -3033,6 +3134,28 @@ section,
   border-radius: 20px;
   padding: 24px;
   box-shadow: 0 24px 40px -30px color-mix(in srgb, var(--default-color), transparent 70%);
+}
+
+.support-us-page .donate-card-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.support-us-page .donate-selected {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--accent-color), transparent 75%);
+  background: color-mix(in srgb, var(--accent-color), transparent 92%);
+  color: var(--accent-color);
+  font-size: 0.85rem;
+  font-weight: 600;
+  white-space: nowrap;
 }
 
 .support-us-page .donate-card h3 {
@@ -3060,6 +3183,13 @@ section,
   background: color-mix(in srgb, var(--accent-color), transparent 84%);
 }
 
+.support-us-page .donate-chip.active {
+  background: var(--accent-color);
+  border-color: var(--accent-color);
+  color: var(--contrast-color);
+  box-shadow: 0 12px 20px -16px color-mix(in srgb, var(--accent-color), transparent 35%);
+}
+
 .support-us-page .donate-other label {
   font-weight: 600;
   margin-bottom: 6px;
@@ -3077,6 +3207,9 @@ section,
   border: 1px solid color-mix(in srgb, var(--default-color), transparent 88%);
   padding: 28px;
   box-shadow: 0 28px 50px -34px color-mix(in srgb, var(--default-color), transparent 70%);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 .support-us-page .paypal-head {
@@ -3087,6 +3220,35 @@ section,
   padding-bottom: 16px;
   border-bottom: 1px solid color-mix(in srgb, var(--default-color), transparent 90%);
   margin-bottom: 20px;
+}
+
+.support-us-page .paypal-summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 16px;
+  border-radius: 16px;
+  border: 1px solid color-mix(in srgb, var(--accent-color), transparent 80%);
+  background: color-mix(in srgb, var(--accent-color), transparent 92%);
+  margin-bottom: 18px;
+}
+
+.support-us-page .paypal-summary .summary-label {
+  display: block;
+  font-size: 0.85rem;
+  color: color-mix(in srgb, var(--default-color), transparent 35%);
+}
+
+.support-us-page .paypal-summary .summary-value {
+  display: block;
+  font-size: 1.1rem;
+  color: var(--accent-color);
+}
+
+.support-us-page .paypal-summary .summary-note {
+  font-size: 0.85rem;
+  color: color-mix(in srgb, var(--default-color), transparent 35%);
 }
 
 .support-us-page .paypal-badge {
@@ -3102,13 +3264,20 @@ section,
   font-weight: 600;
 }
 
+.support-us-page .paypal-form {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  gap: 12px;
+}
+
 .support-us-page .paypal-btn {
   width: 100%;
   border: none;
   border-radius: 14px;
   padding: 12px 18px;
   font-weight: 700;
-  margin-top: 18px;
+  margin-top: auto;
   background: #ffc439;
   color: #111111;
 }
@@ -3124,16 +3293,47 @@ section,
 }
 
 .support-us-page .ways-section {
-  background: #ffffff;
+  background: linear-gradient(180deg, #ffffff 0%, #f9f9f9 100%);
 }
 
 .support-us-page .ways-card {
   background: var(--surface-color);
   border: 1px solid color-mix(in srgb, var(--default-color), transparent 88%);
   border-radius: 18px;
-  padding: 22px;
+  padding: 26px;
   height: 100%;
   box-shadow: 0 20px 32px -26px color-mix(in srgb, var(--default-color), transparent 70%);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.support-us-page .ways-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background: linear-gradient(90deg, var(--accent-color), color-mix(in srgb, var(--accent-color), transparent 45%));
+}
+
+.support-us-page .ways-card:hover {
+  transform: translateY(-6px);
+  border-color: color-mix(in srgb, var(--accent-color), transparent 60%);
+  box-shadow: 0 26px 40px -28px color-mix(in srgb, var(--default-color), transparent 70%);
+}
+
+.support-us-page .ways-card h3,
+.support-us-page .ways-card p {
+  margin-bottom: 0;
+}
+
+.support-us-page .ways-card p {
+  color: color-mix(in srgb, var(--default-color), transparent 25%);
 }
 
 .support-us-page .ways-icon {
@@ -3141,6 +3341,7 @@ section,
   height: 46px;
   border-radius: 12px;
   background: color-mix(in srgb, var(--accent-color), transparent 90%);
+  border: 1px solid color-mix(in srgb, var(--accent-color), transparent 70%);
   display: grid;
   place-items: center;
   color: var(--accent-color);
@@ -3386,6 +3587,33 @@ body.grant-recipients-page .main {
   padding: 22px;
   height: 100%;
   box-shadow: 0 18px 30px -26px color-mix(in srgb, var(--default-color), transparent 70%);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.grants-page .grant-category-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background: linear-gradient(90deg, var(--accent-color), color-mix(in srgb, var(--accent-color), transparent 45%));
+}
+
+.grants-page .grant-category-card:hover {
+  transform: translateY(-6px);
+  border-color: color-mix(in srgb, var(--accent-color), transparent 60%);
+  box-shadow: 0 24px 40px -28px color-mix(in srgb, var(--default-color), transparent 70%);
+}
+
+.grants-page .grant-category-card p {
+  margin-bottom: 0;
+  color: color-mix(in srgb, var(--default-color), transparent 25%);
 }
 
 .grants-page .grant-category-icon {
@@ -3393,6 +3621,7 @@ body.grant-recipients-page .main {
   height: 46px;
   border-radius: 12px;
   background: color-mix(in srgb, var(--accent-color), transparent 90%);
+  border: 1px solid color-mix(in srgb, var(--accent-color), transparent 70%);
   display: grid;
   place-items: center;
   color: var(--accent-color);
@@ -3401,9 +3630,37 @@ body.grant-recipients-page .main {
 }
 
 .grants-page .apply-steps {
-  padding-left: 18px;
+  list-style: none;
+  padding-left: 0;
+  margin: 22px 0 0;
+  counter-reset: apply-step;
   display: grid;
   gap: 16px;
+}
+
+.grants-page .apply-steps li {
+  position: relative;
+  padding: 18px 18px 18px 60px;
+  border-radius: 18px;
+  border: 1px solid color-mix(in srgb, var(--default-color), transparent 88%);
+  background: var(--surface-color);
+  box-shadow: 0 18px 30px -26px color-mix(in srgb, var(--default-color), transparent 70%);
+}
+
+.grants-page .apply-steps li::before {
+  counter-increment: apply-step;
+  content: counter(apply-step);
+  position: absolute;
+  left: 18px;
+  top: 18px;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-weight: 700;
+  color: var(--contrast-color);
+  background: var(--accent-color);
 }
 
 .grants-page .apply-steps h4 {
@@ -3416,6 +3673,18 @@ body.grant-recipients-page .main {
   border: 1px solid color-mix(in srgb, var(--default-color), transparent 88%);
   padding: 24px;
   box-shadow: 0 24px 40px -30px color-mix(in srgb, var(--default-color), transparent 70%);
+  position: relative;
+  overflow: hidden;
+}
+
+.grants-page .apply-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background: linear-gradient(90deg, var(--accent-color), color-mix(in srgb, var(--accent-color), transparent 45%));
 }
 
 .grants-page .apply-card ul {
@@ -3426,9 +3695,16 @@ body.grant-recipients-page .main {
   gap: 10px;
 }
 
+.grants-page .apply-card ul li {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  color: color-mix(in srgb, var(--default-color), transparent 15%);
+}
+
 .grants-page .apply-card i {
   color: var(--accent-color);
-  margin-right: 8px;
+  margin-right: 0;
 }
 
 .grants-page .requirements-card {
@@ -3803,6 +4079,9 @@ body.golf-outing-page .main {
   border: 1px solid color-mix(in srgb, var(--default-color), transparent 88%);
   padding: 24px;
   box-shadow: 0 24px 40px -34px color-mix(in srgb, var(--default-color), transparent 70%);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 .golf-outing-page .summary-list {
@@ -3823,16 +4102,61 @@ body.golf-outing-page .main {
 .golf-outing-page .sponsor-levels li {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
+  gap: 12px;
   padding: 10px 12px;
   border-radius: 12px;
   background: color-mix(in srgb, var(--accent-color), transparent 92%);
   font-weight: 600;
 }
 
+.golf-outing-page .sponsor-levels .level-price {
+  background: #ffffff;
+  border-radius: 999px;
+  padding: 4px 10px;
+  border: 1px solid color-mix(in srgb, var(--accent-color), transparent 70%);
+  color: var(--accent-color);
+  white-space: nowrap;
+}
+
+.golf-outing-page .sponsor-levels .level-name {
+  color: color-mix(in srgb, var(--default-color), transparent 15%);
+}
+
 .golf-outing-page .sponsor-note {
   font-size: 0.9rem;
   color: color-mix(in srgb, var(--default-color), transparent 35%);
+}
+
+.golf-outing-page .pay-summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding: 12px 16px;
+  border-radius: 16px;
+  border: 1px solid color-mix(in srgb, var(--accent-color), transparent 80%);
+  background: color-mix(in srgb, var(--accent-color), transparent 92%);
+  margin-bottom: 16px;
+}
+
+.golf-outing-page .pay-summary .summary-label {
+  display: block;
+  font-size: 0.85rem;
+  color: color-mix(in srgb, var(--default-color), transparent 35%);
+}
+
+.golf-outing-page .pay-summary .summary-value {
+  display: block;
+  font-size: 1.1rem;
+  color: var(--accent-color);
+}
+
+.golf-outing-page .pay-summary .summary-note {
+  font-size: 0.85rem;
+  color: color-mix(in srgb, var(--default-color), transparent 35%);
+  text-align: left;
 }
 
 .golf-outing-page .pay-card-head,
@@ -3859,13 +4183,26 @@ body.golf-outing-page .main {
   font-weight: 600;
 }
 
+.golf-outing-page .pay-form {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  gap: 12px;
+}
+
+.golf-outing-page .pay-form .form-hint {
+  margin: 6px 0 0;
+  font-size: 0.85rem;
+  color: color-mix(in srgb, var(--default-color), transparent 40%);
+}
+
 .golf-outing-page .pay-form .golf-btn {
   width: 100%;
-  margin-top: 18px;
+  margin-top: auto;
 }
 
 .golf-outing-page .pay-note {
-  margin-top: 10px;
+  margin-top: 0;
   font-size: 0.85rem;
   color: color-mix(in srgb, var(--default-color), transparent 45%);
 }
