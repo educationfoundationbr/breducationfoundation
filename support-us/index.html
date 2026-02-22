@@ -30,7 +30,8 @@
     <div class="header-container container-fluid container-xl position-relative d-flex align-items-center justify-content-between">
 
       <a href="/" class="logo d-flex align-items-center me-auto me-xl-0">
-        <h1 class="sitename">Education Foundation of BR</h1>
+        <img src="/assets/img/favicon.png" alt="Education Foundation logo">
+        <h1 class="sitename">Education Foundation of Bridgewater-Raritan</h1>
       </a>
 
 
@@ -67,11 +68,11 @@
         <div class="row align-items-center g-5">
           <div class="col-lg-6" data-aos="fade-right">
             <span class="support-eyebrow">Support Us</span>
-            <h1 class="support-title">Give students the tools to thrive.</h1>
-            <p class="support-lead">Your donation helps fund district mini-grants, scholarships, and innovation across Bridgewater-Raritan.</p>
+            <h1 class="support-title">Donate Today</h1>
+            <p class="support-lead">Your donation helps fund district mini-grants, scholarships, and other forms of innovation across Bridgewater-Raritan.</p>
             <div class="support-actions">
-              <a href="#donate" class="support-btn">Donate Now</a>
-              <a href="#ways" class="support-btn-outline">Ways to Help</a>
+              <a href="https://www.paypal.com/donate" class="support-btn" target="_blank" rel="noopener">Donate Now on PayPal</a>
+              <a href="#ways" class="support-btn-outline">Other Ways to Help</a>
             </div>
             <div class="support-badges">
               <div class="support-badge">
@@ -93,8 +94,8 @@
             <div class="support-hero-card">
               <div class="support-card-head">
                 <div>
-                  <h3>Impact Snapshot</h3>
-                  <p>Where your gift goes, at a glance.</p>
+                  <h3>Fundraising Meter</h3>
+                  <p>View where your donation goes.</p>
                 </div>
                 <span class="support-card-tag">Since 1993</span>
               </div>
@@ -115,7 +116,7 @@
                   <i class="bi bi-journal-check"></i>
                   <div>
                     <h4>Mini-Grants</h4>
-      
+
                   </div>
                 </div>
                 <div class="impact-item">
@@ -129,7 +130,7 @@
                   <i class="bi bi-brush"></i>
                   <div>
                     <h4>Arts + STEM</h4>
-     
+
                   </div>
                 </div>
                 <div class="impact-item">
@@ -139,102 +140,6 @@
                   </div>
                 </div>
               </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section id="donate" class="donate-section section light-background">
-      <div class="container">
-        <div class="row g-4 align-items-start">
-          <div class="col-lg-5" data-aos="fade-up">
-            <div class="donate-copy">
-              <span class="support-eyebrow">Donate Section</span>
-             <!-- todo: check if we want to mention tax ID here -->
-              <h2>Make a direct and measurable impact.</h2>
-              <p>Your gift goes straight to the programs that allow the advancement of classrooms, rewarding of educators, and the creation new learning experiences.</p>
-              <ul class="donate-list">
-                <li><i class="bi bi-check-circle-fill"></i> Mini-grants for teachers and collaborative projects.</li>
-                <li><i class="bi bi-check-circle-fill"></i> Scholarships and student recognition.</li>
-                <li><i class="bi bi-check-circle-fill"></i> Community-driven support for innovative learning.</li>
-              </ul>
-            </div>
-
-           <div class="donate-card">
-              <div class="donate-card-head">
-                <div>
-                  <h3>Choose an amount</h3>
-                  <p>Most donors give $50 to $250.</p>
-                </div>
-                <span class="donate-selected">Selected: <strong id="donate-selected-display">$50</strong></span>
-              </div>
-              <div class="donate-amounts" role="group" aria-label="Select a donation amount">
-               <!-- note: amounts are adjustable in main.js -->
-                <button type="button" class="donate-chip" data-amount="25" aria-pressed="false">$25</button>
-                <button type="button" class="donate-chip active" data-amount="50" aria-pressed="true">$50</button>
-                <button type="button" class="donate-chip" data-amount="100" aria-pressed="false">$100</button>
-                <button type="button" class="donate-chip" data-amount="250" aria-pressed="false">$250</button>
-              </div>
-            <div class="donate-other">
-             <!-- note: keep custom amount field optional -->
-                <label for="donate-other">Other Amount</label>
-                <div class="input-group">
-                  <span class="input-group-text">$</span>
-                  <input id="donate-other" type="number" class="form-control" placeholder="Custom amount" min="1" step="1" inputmode="numeric">
-                </div>
-              </div>
-            </div>
-          </div>
-
-         <div class="col-lg-7" data-aos="fade-up" data-aos-delay="150">
-            <div class="paypal-card">
-             <!-- reminder: PayPal button is template only for now -->
-              <div class="paypal-head">
-                <div>
-                  <span class="support-eyebrow">PayPal Template</span>
-                  <h3>Complete your donation securely</h3>
-                  <p>This is a placeholder checkout! Will connect the live PayPal integration soon.</p>
-                </div>
-                <span class="paypal-badge">PayPal</span>
-              </div>
-
-              <div class="paypal-summary">
-                <div>
-                  <span class="summary-label">Donation amount</span>
-                  <strong class="summary-value" id="paypal-amount-display">$50</strong>
-                </div>
-                <span class="summary-note">Adjust on the left.</span>
-              </div>
-
-              <form class="paypal-form" data-form-service="gcloud" data-form-name="support_donation">
-               <!-- reminder: live PayPal button later -->
-                <input type="hidden" id="donation-amount" name="donation_amount" value="50">
-                <div class="row g-3">
-                  <div class="col-md-6">
-                    <label class="form-label">First Name</label>
-                    <input type="text" class="form-control" name="first_name" placeholder="First name">
-                  </div>
-                  <div class="col-md-6">
-                    <label class="form-label">Last Name</label>
-                    <input type="text" class="form-control" name="last_name" placeholder="Last name">
-                  </div>
-                  <div class="col-12">
-                   <label class="form-label">Email</label>
-                    <input type="email" class="form-control" name="email" placeholder="you@email.com">
-                  </div>
-                  <div class="col-12">
-                    <label class="form-label">Dedication (optional)</label>
-                 <input type="text" class="form-control" name="dedication" placeholder="In honor of...">
-                  </div>
-                  <div class="col-12 form-check">
-                    <input class="form-check-input" type="checkbox" id="monthly-gift" name="monthly_gift" value="yes">
-                    <label class="form-check-label" for="monthly-gift">Make this a monthly gift</label>
-                  </div>
-                </div>
-                <button type="submit" class="paypal-btn">Pay with PayPal</button>
-                <p class="paypal-disclaimer">Template only. Payment processing will be enabled later.</p>
-              </form>
             </div>
           </div>
         </div>
@@ -253,67 +158,44 @@
           <div class="col-md-6 col-lg-3" data-aos="fade-up">
             <div class="ways-card">
               <div class="ways-icon"><i class="bi bi-megaphone"></i></div>
-              <h3>Annual Campaign</h3>
-              <p>Make a direct gift that goes into classroom innovation and scholarships.</p>
+              <h3>Golf Outing</h3>
+              <p>By registering for our annual golf outing, your payment will go directly into our goals.</p>
             </div>
           </div>
           <div class="col-md-6 col-lg-3" data-aos="fade-up" data-aos-delay="100">
             <div class="ways-card">
               <div class="ways-icon"><i class="bi bi-briefcase"></i></div>
-              <h3>Corporate Sponsorship</h3>
-              <p>Partner with us to fund events, grants, and student-focused programming.</p>
+              <h3>Company Partner</h3>
+              <p>Partner with us to fund events, grants, student-focused innovation, and awareness.</p>
             </div>
           </div>
           <div class="col-md-6 col-lg-3" data-aos="fade-up" data-aos-delay="200">
             <div class="ways-card">
               <div class="ways-icon"><i class="bi bi-people"></i></div>
               <h3>Volunteer Support</h3>
-              <p>Join event committees and help us keep community programs thriving.</p>
+              <p>Contact us to join our event committees and help us keep our mission thriving.</p>
             </div>
           </div>
           <div class="col-md-6 col-lg-3" data-aos="fade-up" data-aos-delay="300">
             <div class="ways-card">
               <div class="ways-icon"><i class="bi bi-gift"></i></div>
               <h3>Matching Gifts</h3>
-              <p>Double your impact by using employer matching gift programs.</p>
+              <p>Double your impact by using employer matching gift programs like Benevity.</p>
             </div>
           </div>
         </div>
       </div>
     </section>
-
-    <section id="mailing-list" class="mailing-section section light-background">
-      <div class="container" data-aos="fade-up">
-        <div class="mailing-card">
-          <div class="row align-items-center g-4">
-            <div class="col-lg-7">
-              <span class="support-eyebrow">Email Mailing List Section</span>
-              <h2>Stay connected to the efforts of the BR Education Foundation.</h2>
-              <p>Get updates on grants, events, and student impact delivered directly to your inbox!</p>
-            </div>
-            <div class="col-lg-5">
-             <!-- todo: verify Mailchimp form fields once list is created -->
-              <form class="mailing-form" data-form-service="mailchimp" data-form-name="support_mailing">
-                <input type="email" class="form-control" name="EMAIL" placeholder="Email address" autocomplete="email" required>
-                <button type="submit" class="support-btn">Join the List</button>
-              </form>
-              <p class="mailing-note">No spam. Unsubscribe anytime.</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
   </main>
 
 
-    <footer id="footer" class="footer">
+      <footer id="footer" class="footer">
 
     <div class="container footer-top">
       <div class="row gy-4">
-        <div class="col-lg-3 col-md-6 footer-about">
+        <div class="col-lg-4 col-md-6 footer-about">
           <a href="/" class="logo d-flex align-items-center">
-            <span class="sitename">Education Foundation of BR</span>
+            <span class="sitename">Education Foundation of Bridgewater-Raritan</span>
           </a>
           <p>Supporting Bridgewater-Raritan students through grants, scholarships, and community partnerships.</p>
           <div class="footer-contact pt-3">
@@ -332,7 +214,6 @@
             <li><a href="/about-us/">About Us</a></li>
             <li><a href="/trustees/">Trustees</a></li>
             <li><a href="/faq/">FAQ</a></li>
-            <li><a href="https://edfoundbr.org/category/news/" target="_blank" rel="noopener">News</a></li>
             <li><a href="/contact/">Contact</a></li>
           </ul>
         </div>
@@ -342,8 +223,6 @@
           <ul>
             <li><a href="/grants/">Grants</a></li>
             <li><a href="/grant-recipients/">Grant Recipients</a></li>
-            <li><a href="https://edfoundbr.org/grants/mini-grant-application/" target="_blank" rel="noopener">Mini-Grant Application</a></li>
-            <li><a href="https://edfoundbr.org/service-awards/" target="_blank" rel="noopener">Service Awards</a></li>
             <li><a href="/golf-outing/">Golf Outing</a></li>
           </ul>
         </div>
@@ -352,34 +231,28 @@
           <h4>Get Involved</h4>
           <ul>
             <li><a href="/support-us/">Support Us</a></li>
-            <li><a href="/support-us/#donate">Donate</a></li>
+            <li><a href="https://www.paypal.com/donate" target="_blank" rel="noopener">Donate</a></li>
             <li><a href="/support-us/#ways">Ways to Help</a></li>
-            <li><a href="/support-us/#mailing-list">Mailing List</a></li>
-            <li><a href="https://edfoundbr.org/how-to-help/" target="_blank" rel="noopener">How to Help</a></li>
           </ul>
         </div>
 
-        <div class="col-lg-3 col-md-6 footer-newsletter">
-          <h4>Stay Informed</h4>
-          <p>Get event updates, grant news, and community stories in your inbox.</p>
-          <form class="footer-newsletter-form" data-form-service="mailchimp" data-form-name="footer_newsletter">
-            <input type="email" class="form-control" name="EMAIL" placeholder="Email address" autocomplete="email" required>
-            <button type="submit" class="btn-subscribe">Join</button>
-          </form>
-          <p class="footer-newsletter-note">We respect your inbox. Unsubscribe anytime.</p>
-          <p class="footer-newsletter-link">
-            <a href="https://edfoundbr.org/stay-informed/" target="_blank" rel="noopener">Official Stay Informed page</a>
-          </p>
+        <div class="col-lg-2 col-md-6 footer-links">
+          <h4>Resources</h4>
+          <ul>
+            <li><a href="https://edfoundbr.org/category/news/" target="_blank" rel="noopener">News</a></li>
+            <li><a href="https://edfoundbr.org/grants/mini-grant-application/" target="_blank" rel="noopener">Mini-Grant Application</a></li>
+            <li><a href="https://edfoundbr.org/service-awards/" target="_blank" rel="noopener">Service Awards</a></li>
+          </ul>
         </div>
-
       </div>
     </div>
 
     <div class="container copyright text-center mt-4">
-      <p>© <span>Education Foundation of Bridgewater-Raritan</span> <span>All Rights Reserved</span></p>
+      <p>&copy; <span>Education Foundation of Bridgewater-Raritan</span> <span>All Rights Reserved</span></p>
     </div>
 
   </footer>
+
 
   <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
 
@@ -396,4 +269,3 @@
 </body>
 
 </html>
- 

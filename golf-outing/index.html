@@ -30,7 +30,8 @@
     <div class="header-container container-fluid container-xl position-relative d-flex align-items-center justify-content-between">
 
       <a href="/" class="logo d-flex align-items-center me-auto me-xl-0">
-        <h1 class="sitename">Education Foundation of BR</h1>
+        <img src="/assets/img/favicon.png" alt="Education Foundation logo">
+        <h1 class="sitename">Education Foundation of Bridgewater-Raritan</h1>
       </a>
 
 
@@ -76,7 +77,7 @@
                 <i class="bi bi-calendar-event"></i>
                 <div>
                   <span class="detail-label">Date &amp; Time</span>
-                  <span>Thursday, July 9, 2026 &middot; Shotgun start at Noon</span>
+                  <span>Thursday, July 9th, 2026 &middot; Shotgun start at Noon</span>
                 </div>
               </div>
               <div class="detail-item">
@@ -99,7 +100,7 @@
              <!-- note: consider adding a "Donate" link here -->
               <a href="#registration" class="golf-btn">Register for Golf</a>
               <a href="#sponsorship" class="golf-btn-outline">Sponsor a Hole</a>
-              <a href="#bbq" class="golf-link">BBQ Dinner Only</a>
+              <a href="#bbq" class="golf-btn-outline">BBQ Dinner</a>
             </div>
           </div>
 
@@ -113,136 +114,203 @@
     </section>
 
     <section id="sponsorship" class="golf-sponsorship section light-background">
-     <!-- reminder: sponsorship tiers might shift before launch -->
       <div class="container">
         <div class="section-title text-start" data-aos="fade-up">
-          <span class="golf-eyebrow">Golf Sponsorship Overview</span>
-          <h2>Support the outing, fund the grants.</h2>
-          <p>We look forward to enjoying a great day out while supporting innovative projects and programs for Bridgewater-Raritan students.</p>
+          <span class="golf-eyebrow">Golf Sponsorship</span>
+          <h2>Support the outing and fund classroom grants.</h2>
         </div>
 
         <div class="row g-4">
          <div class="col-lg-7" data-aos="fade-up">
             <div class="golf-summary-card">
-              <h3>Golf Event Summary</h3>
-              <p>Bring your friends or register as an individual for the Education Foundation of Bridgewater-Raritan Golf Outing. Registration includes a relaxing BBQ dinner with beer and wine after your outing. Not a golfer? You can still join us afterwards for the BBQ Dinner. Sponsor a hole to support the cause and get your business recognized.</p>
-              <ul class="summary-list">
-                <li><strong>Date &amp; Time:</strong> Thursday, July 9, 2026 with shotgun start at Noon.</li>
-                <li><strong>Where:</strong> Fox Hollow Golf Club | Branchburg, NJ.</li>
-                <li><strong>Includes:</strong> BBQ dinner with beer and wine for participants.</li>
-                <li><strong>Golf + Dinner:</strong> $150 per golfer.</li>
-                <li><strong>BBQ Dinner Only:</strong> $65 per person.</li>
-              </ul>
+              <div class="summary-header">
+                <h3>Golf Event Summary</h3>
+                <p>Join us in the Education Foundation of Bridgewater-Raritan Golf Outing!</p>
+              </div>
+              <div class="row g-3 summary-grid">
+                <div class="col-md-6">
+                  <article class="summary-tile">
+                    <span class="summary-label">Date &amp; Time</span>
+                    <p>Thursday, July 9th, 2026<br>Shotgun start at Noon</p>
+                  </article>
+                </div>
+                <div class="col-md-6">
+                  <article class="summary-tile">
+                    <span class="summary-label">Location</span>
+                    <p>Fox Hollow Golf Club<br>Branchburg, NJ</p>
+                  </article>
+                </div>
+                <div class="col-md-6">
+                  <article class="summary-tile">
+                    <span class="summary-label">Golf + Dinner</span>
+                    <p>$150 per golfer</p>
+                  </article>
+                </div>
+                <div class="col-md-6">
+                  <article class="summary-tile">
+                    <span class="summary-label">BBQ Dinner</span>
+                    <p>$65 per person</p>
+                  </article>
+                </div>
+              </div>
             </div>
           </div>
 
           <div class="col-lg-5" data-aos="fade-up" data-aos-delay="150">
             <div class="golf-sponsor-card">
-              <h3>Sponsorship Price Levels</h3>
+              <h3>Sponsorship Options</h3>
               <ul class="sponsor-levels">
-                <li><span class="level-price">$500 - $10K</span><span class="level-name">Hole-in-One Sponsor (custom)</span></li>
+                <li><span class="level-price">$500</span><span class="level-name">$10K Hole-in-One Sponsor</span></li>
                 <li><span class="level-price">$100</span><span class="level-name">3 Hole Sponsor</span></li>
                 <li><span class="level-price">$50</span><span class="level-name">1 Hole Sponsor</span></li>
-                <li><span class="level-price">$50 - $500</span><span class="level-name">Golf Sponsor Range (custom)</span></li>
               </ul>
-              <p class="sponsor-note">Once payment is submitted, a member of the Education Foundation will reach out for your desired logo and wording.</p>
+              <p class="sponsor-note">*Hole-in-One Sponsor: If you make a Hole-in-One, you win $10K.</p>
             </div>
           </div>
         </div>
 
         <div id="registration" class="row g-4 mt-4">
-         <!-- note: pricing text ties to JS total calc -->
           <div class="col-lg-6" data-aos="fade-up">
             <div class="golf-pay-card">
               <div class="pay-card-head">
                 <div>
-                  <h3>Golf Outing Registration</h3>
-                  <p>Registration includes a round of golf plus BBQ dinner with beer and wine.</p>
+                  <h3>Golf Registration</h3>
+                  <p>Complete this form, then checkout appears below.</p>
                 </div>
-                <span class="pay-badge">PayPal</span>
+                <span class="pay-badge" aria-label="PayPal and Venmo accepted">
+                  <span class="pay-badge-paypal">PayPal</span>
+                  <span class="pay-badge-venmo">Venmo</span>
+                </span>
               </div>
-              <div class="pay-summary">
-                <div>
-                  <span class="summary-label">Total due</span>
-                  <strong class="summary-value" id="golf-total">$150</strong>
+              <div class="pay-form">
+                <form class="precheckout-form" data-form-service="precheckout" data-form-name="golf_registration_intake" data-checkout-type="Golf Registration">
+                  <div class="row g-3">
+                    <div class="col-12">
+                      <label class="form-label" for="registration-package">Registration Package</label>
+                      <select class="form-select" id="registration-package" name="registrationPackage" data-paypal-selector-source required>
+                        <option value="" selected disabled>Select package</option>
+                        <option value="Golf Registration - Foursome" data-paypal-button-id="JXGD7Q2CWLYVN" data-paypal-target="#paypal-wrap-JXGD7Q2CWLYVN" data-amount="Foursome">Golf Registration - Foursome</option>
+                        <option value="Golf Registration - One Golfer" data-paypal-button-id="ZQK7S4U4T4LDW" data-paypal-target="#paypal-wrap-ZQK7S4U4T4LDW" data-amount="One Golfer">Golf Registration - One Golfer</option>
+                      </select>
+                    </div>
+                    <div class="col-12">
+                      <label class="form-label" for="registration-name">Full Name</label>
+                      <input type="text" class="form-control" id="registration-name" name="fullName" required>
+                    </div>
+                    <div class="col-md-6">
+                      <label class="form-label" for="registration-email">Email</label>
+                      <input type="email" class="form-control" id="registration-email" name="email" required>
+                    </div>
+                    <div class="col-md-6">
+                      <label class="form-label" for="registration-phone">Phone</label>
+                      <input type="tel" class="form-control" id="registration-phone" name="phone" required>
+                    </div>
+                    <div class="col-12">
+                      <label class="form-label" for="registration-notes">Notes (optional)</label>
+                      <textarea class="form-control" id="registration-notes" name="notes" rows="2" placeholder="Names in your foursome, special requests, etc."></textarea>
+                    </div>
+                  </div>
+                  <div class="form-cta-row registration-cta-row">
+                    <button type="submit" class="golf-btn">Continue to PayPal</button>
+                  </div>
+                  <p class="form-hint">Payment options appear below after you continue.</p>
+                  <p class="form-hint form-hint-accent">Only completed payments are recorded.</p>
+                  <p class="form-hint submission-confirmation d-none">Checkout is ready below. Complete payment to confirm your registration.</p>
+                </form>
+
+                <div id="paypal-wrap-JXGD7Q2CWLYVN" class="paypal-live-wrap d-none" data-paypal-wrapper data-paypal-button-id="JXGD7Q2CWLYVN" data-paypal-container="#paypal-container-JXGD7Q2CWLYVN">
+                  <label class="form-label">Complete payment for Golf Registration - Foursome</label>
+                  <div id="paypal-container-JXGD7Q2CWLYVN"></div>
                 </div>
-                <span class="summary-note" id="golf-unit">$150 per registrant</span>
+
+                <div id="paypal-wrap-ZQK7S4U4T4LDW" class="paypal-live-wrap d-none" data-paypal-wrapper data-paypal-button-id="ZQK7S4U4T4LDW" data-paypal-container="#paypal-container-ZQK7S4U4T4LDW">
+                  <label class="form-label">Complete payment for Golf Registration - One Golfer</label>
+                  <div id="paypal-container-ZQK7S4U4T4LDW"></div>
+                </div>
               </div>
-              <form class="pay-form" data-form-service="gcloud" data-form-name="golf_registration">
-                <input type="hidden" id="golf-amount" name="golf_amount" value="150">
-                <div class="row g-3">
-                 <div class="col-12">
-                    <label class="form-label">Registration Type</label>
-                    <select class="form-select" id="golf-registration-type" name="registration_type">
-                      <option value="Golfer Registration" data-price="150" data-unit="per golfer" selected>Golfer Registration - $150</option>
-                      <option value="Individual Registration" data-price="150" data-unit="per golfer">Individual Registration - $150</option>
-                      <option value="Dinner Only (BBQ + Drinks)" data-price="65" data-unit="per person">Dinner Only (BBQ + Drinks) - $65</option>
-                    </select>
-                  </div>
-                 <div class="col-6">
-                    <label class="form-label">Quantity</label>
-                    <input type="number" class="form-control" name="quantity" value="1" min="1" id="golf-registration-qty">
-                  </div>
-                  <div class="col-6">
-                   <label class="form-label">Email</label>
-                    <input type="email" class="form-control" name="email" placeholder="you@email.com">
-                  </div>
-                </div>
-                <button type="submit" class="golf-btn">Pay with PayPal</button>
-               <!-- reminder: template only for now -->
-                <p class="pay-note">Template only. Payment processing will be enabled later.</p>
-              </form>
             </div>
           </div>
 
-         <div class="col-lg-6" data-aos="fade-up" data-aos-delay="150">
+          <div class="col-lg-6" data-aos="fade-up" data-aos-delay="150">
             <div class="golf-pay-card">
               <div class="pay-card-head">
                 <div>
-                  <h3>Golf Sponsor</h3>
-                  <p>Hole sponsor sign on the course. Select your sponsorship level.</p>
+                  <h3>Golf Sponsorship Checkout</h3>
+                  <p>Complete this form, then checkout appears below.</p>
                 </div>
-                <span class="pay-badge">PayPal</span>
+                <span class="pay-badge" aria-label="PayPal and Venmo accepted">
+                  <span class="pay-badge-paypal">PayPal</span>
+                  <span class="pay-badge-venmo">Venmo</span>
+                </span>
               </div>
-              <div class="pay-summary">
-                <div>
-                  <span class="summary-label">Amount due</span>
-                  <strong class="summary-value" id="sponsor-total">$500</strong>
-                </div>
-                <span class="summary-note">Adjust the amount below for custom sponsorships.</span>
-              </div>
-              <form class="pay-form" data-form-service="gcloud" data-form-name="golf_sponsorship">
-                <input type="hidden" id="sponsor-amount-hidden" name="sponsor_amount_total" value="500">
-                <div class="row g-3">
-                  <div class="col-12">
-                    <label class="form-label">Sponsorship Level</label>
-                    <select class="form-select" id="sponsor-level" name="sponsor_level">
-                      <option value="Hole-in-One Sponsor" data-amount="500" selected>Hole-in-One Sponsor (Custom $500 - $10,000)</option>
-                      <option value="3 Hole Sponsor" data-amount="100">3 Hole Sponsor - $100</option>
-                      <option value="1 Hole Sponsor" data-amount="50">1 Hole Sponsor - $50</option>
-                      <option value="Golf Sponsor Range" data-amount="50">Golf Sponsor Range (Custom $50 - $500)</option>
-                    </select>
-                  </div>
-                  <div class="col-12">
-                    <label class="form-label">Sponsorship Amount</label>
-                    <div class="input-group">
-                      <span class="input-group-text">$</span>
-                      <input type="number" class="form-control" id="sponsor-amount" name="sponsor_amount" min="50" step="1" value="500">
+              <div class="pay-form">
+                <form class="precheckout-form" data-form-service="precheckout" data-form-name="golf_sponsorship_intake" data-checkout-type="Golf Sponsorship">
+                  <div class="row g-3">
+                    <div class="col-12">
+                      <label class="form-label" for="sponsor-level">Sponsorship Level</label>
+                      <select class="form-select" id="sponsor-level" name="sponsorLevel" data-paypal-selector-source required>
+                        <option value="" selected disabled>Select sponsor level</option>
+                        <option value="$500 - $10K Hole-in-One Sponsor" data-paypal-button-id="YKLYJSK4YKQP8" data-paypal-target="#paypal-wrap-YKLYJSK4YKQP8" data-amount="$500">$500 - $10K Hole-in-One Sponsor</option>
+                        <option value="$100 - 3 Hole Sponsor" data-paypal-button-id="Q9CR5NS6W5FCE" data-paypal-target="#paypal-wrap-Q9CR5NS6W5FCE" data-amount="$100">$100 - 3 Hole Sponsor</option>
+                        <option value="$50 - 1 Hole Sponsor" data-paypal-button-id="JKMRADQ3F9SCJ" data-paypal-target="#paypal-wrap-JKMRADQ3F9SCJ" data-amount="$50">$50 - 1 Hole Sponsor</option>
+                      </select>
                     </div>
-                    <p class="form-hint">Enter the amount that matches your sponsorship level.</p>
+                    <div class="col-12">
+                      <label class="form-label" for="sponsor-org">Organization Name</label>
+                      <input type="text" class="form-control" id="sponsor-org" name="organization" required>
+                    </div>
+                    <div class="col-12">
+                      <label class="form-label" for="sponsor-name">Contact Name</label>
+                      <input type="text" class="form-control" id="sponsor-name" name="fullName" required>
+                    </div>
+                    <div class="col-md-6">
+                      <label class="form-label" for="sponsor-email">Contact Email</label>
+                      <input type="email" class="form-control" id="sponsor-email" name="email" required>
+                    </div>
+                    <div class="col-md-6">
+                      <label class="form-label" for="sponsor-phone">Contact Phone</label>
+                      <input type="tel" class="form-control" id="sponsor-phone" name="phone" required>
+                    </div>
+                    <div class="col-12">
+                      <label class="form-label" for="sponsor-text">Sponsor wording for sign</label>
+                      <textarea class="form-control" id="sponsor-text" name="sponsorText" rows="2" required></textarea>
+                    </div>
+                    <div class="col-12">
+                      <label class="form-label" for="sponsor-logo">Optional image/logo upload</label>
+                      <input type="file" class="form-control" id="sponsor-logo" name="logoFile" accept="image/*" data-image-preview-target="#sponsor-logo-preview" data-image-preview-wrap="#sponsor-logo-preview-wrap">
+                    </div>
+                    <div class="col-12 d-none sponsor-logo-preview-wrap" id="sponsor-logo-preview-wrap">
+                      <span class="preview-label">Logo preview</span>
+                      <img id="sponsor-logo-preview" class="sponsor-logo-preview" alt="Uploaded sponsor logo preview">
+                    </div>
+                    <div class="col-12">
+                      <label class="form-label" for="sponsor-notes">Notes (optional)</label>
+                      <textarea class="form-control" id="sponsor-notes" name="notes" rows="2"></textarea>
+                    </div>
                   </div>
-                  <div class="col-12">
-                    <label class="form-label">Organization Name</label>
-                    <input type="text" class="form-control" name="organization_name" placeholder="Company or family name">
+                  <div class="form-cta-row">
+                    <button type="submit" class="golf-btn">Continue to PayPal</button>
                   </div>
-                  <div class="col-12">
-                    <label class="form-label">Contact Email</label>
-                    <input type="email" class="form-control" name="contact_email" placeholder="you@email.com">
-                  </div>
+                  <p class="form-hint">Payment options appear below after you continue.</p>
+                  <p class="form-hint form-hint-accent">Only completed payments are recorded.</p>
+                  <p class="form-hint submission-confirmation d-none">Checkout is ready below. Complete payment to confirm your sponsorship.</p>
+                </form>
+
+                <div id="paypal-wrap-YKLYJSK4YKQP8" class="paypal-live-wrap d-none" data-paypal-wrapper data-paypal-button-id="YKLYJSK4YKQP8" data-paypal-container="#paypal-container-YKLYJSK4YKQP8">
+                  <label class="form-label">Complete payment for $500 - $10K Hole-in-One Sponsor</label>
+                  <div id="paypal-container-YKLYJSK4YKQP8"></div>
                 </div>
-                <button type="submit" class="golf-btn">Pay with PayPal</button>
-                <p class="pay-note">Template only. Payment processing will be enabled later.</p>
-              </form>
+
+                <div id="paypal-wrap-Q9CR5NS6W5FCE" class="paypal-live-wrap d-none" data-paypal-wrapper data-paypal-button-id="Q9CR5NS6W5FCE" data-paypal-container="#paypal-container-Q9CR5NS6W5FCE">
+                  <label class="form-label">Complete payment for $100 - 3 Hole Sponsor</label>
+                  <div id="paypal-container-Q9CR5NS6W5FCE"></div>
+                </div>
+
+                <div id="paypal-wrap-JKMRADQ3F9SCJ" class="paypal-live-wrap d-none" data-paypal-wrapper data-paypal-button-id="JKMRADQ3F9SCJ" data-paypal-container="#paypal-container-JKMRADQ3F9SCJ">
+                  <label class="form-label">Complete payment for $50 - 1 Hole Sponsor</label>
+                  <div id="paypal-container-JKMRADQ3F9SCJ"></div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -251,43 +319,77 @@
 
     <section id="bbq" class="golf-bbq section">
       <div class="container">
-        <div class="row g-5 align-items-center">
-          <div class="col-lg-6" data-aos="fade-up">
-            <span class="golf-eyebrow">BBQ Dinner &amp; Drinks</span>
-            <h2>Grilling on the Green.</h2>
-            <p>Join us for a BBQ Dinner with beer and wine selections included. Grilling on the Green this Thursday, July 9th. Join your friends for a great time, cold drinks, and a relaxed evening after the outing.</p>
-            <div class="bbq-details">
-              <div><strong>Price:</strong> $65.00 per person</div>
-              <div><strong>Includes:</strong> BBQ dinner + beer and wine</div>
-            </div>
-          </div>
-
-          <div class="col-lg-6" data-aos="fade-up" data-aos-delay="150">
-            <div class="bbq-card">
-              <div class="bbq-card-head">
-                <div>
-                  <h3>BBQ Dinner &amp; Drinks</h3>
-                  <p>Includes BBQ dinner with beer and wine for one person.</p>
+        <div class="bbq-unified-card" data-aos="fade-up">
+          <div class="row g-4 align-items-stretch">
+            <div class="col-lg-5">
+              <div class="bbq-info-panel">
+                <span class="golf-eyebrow">BBQ Dinner &amp; Drinks</span>
+                <h2>Grilling on the Green.</h2>
+                <p>Join us after the outing for dinner, drinks, and networking. Complete the short form and continue to PayPal or Venmo checkout.</p>
+                <div class="bbq-image-wrap">
+                  <img src="../assets/img/bbq.png" class="img-fluid bbq-image" alt="BBQ dinner and drinks">
                 </div>
-                <span class="pay-badge">PayPal</span>
+                <div class="bbq-info-meta">
+                  <span>Thursday, July 9th, 2026</span>
+                  <span>$65.00 per guest</span>
+                </div>
+                <ul class="bbq-info-list">
+                  <li><i class="bi bi-check2-circle"></i>BBQ dinner with beer and wine</li>
+                  <li><i class="bi bi-check2-circle"></i>Open to golfers and non-golfers</li>
+                  <li><i class="bi bi-check2-circle"></i>Final quantity selected in PayPal</li>
+                </ul>
               </div>
-              <div class="bbq-price">$65.00</div>
-              <form class="pay-form" data-form-service="gcloud" data-form-name="golf_bbq">
-                <input type="hidden" name="bbq_unit_price" value="65">
-                <div class="row g-3">
-                  <div class="col-6">
-                    <label class="form-label">Quantity</label>
-                    <input type="number" class="form-control" name="quantity" value="1" min="1">
+            </div>
+
+            <div class="col-lg-7">
+              <div class="bbq-form-panel">
+                <div class="bbq-card">
+                  <div class="bbq-card-head">
+                    <div>
+                      <h3>BBQ Dinner &amp; Drinks</h3>
+                      <p>Dinner quantity is selected once checkout opens.</p>
+                    </div>
+                    <span class="pay-badge" aria-label="PayPal and Venmo accepted">
+                      <span class="pay-badge-paypal">PayPal</span>
+                      <span class="pay-badge-venmo">Venmo</span>
+                    </span>
                   </div>
-                  <div class="col-6">
-                    <label class="form-label">Email</label>
-                    <input type="email" class="form-control" name="email" placeholder="you@email.com">
+                  <div class="bbq-price">$65.00</div>
+                  <div class="pay-form">
+                    <form class="precheckout-form bbq-form" data-form-service="precheckout" data-form-name="golf_bbq_intake" data-checkout-type="BBQ Dinner" data-paypal-target="#paypal-wrap-VNGH4WERSBPUA" data-paypal-button-id="VNGH4WERSBPUA" data-amount="$65">
+                      <div class="row g-3">
+                        <div class="col-12">
+                          <label class="form-label" for="bbq-name">Primary Attendee Name</label>
+                          <input type="text" class="form-control" id="bbq-name" name="fullName" required>
+                        </div>
+                        <div class="col-md-6">
+                          <label class="form-label" for="bbq-email">Email</label>
+                          <input type="email" class="form-control" id="bbq-email" name="email" required>
+                        </div>
+                        <div class="col-md-6">
+                          <label class="form-label" for="bbq-phone">Phone</label>
+                          <input type="tel" class="form-control" id="bbq-phone" name="phone" required>
+                        </div>
+                        <div class="col-12">
+                          <label class="form-label" for="bbq-guest-names">Guest Names (optional)</label>
+                          <textarea class="form-control" id="bbq-guest-names" name="guestNames" rows="4" placeholder="Enter guest names, one per line or comma separated"></textarea>
+                        </div>
+                      </div>
+                      <div class="form-cta-row bbq-cta-row">
+                        <button type="submit" class="golf-btn">Continue to PayPal</button>
+                      </div>
+                      <p class="form-hint">Payment options appear below after you continue.</p>
+                      <p class="form-hint form-hint-accent">Only completed payments are recorded.</p>
+                      <p class="form-hint submission-confirmation d-none">Checkout is ready below. Complete payment to confirm dinner registration.</p>
+                    </form>
+
+                    <div id="paypal-wrap-VNGH4WERSBPUA" class="paypal-live-wrap d-none" data-paypal-wrapper data-paypal-button-id="VNGH4WERSBPUA" data-paypal-container="#paypal-container-VNGH4WERSBPUA">
+                      <label class="form-label">Complete payment for BBQ Dinner &amp; Drinks</label>
+                      <div id="paypal-container-VNGH4WERSBPUA"></div>
+                    </div>
                   </div>
                 </div>
-                <button type="submit" class="golf-btn">Add to Cart</button>
-               <!-- reminder: still template copy -->
-                <p class="pay-note">Template only. Payment processing will be enabled later.</p>
-              </form>
+              </div>
             </div>
           </div>
         </div>
@@ -297,13 +399,13 @@
   </main>
 
 
-    <footer id="footer" class="footer">
+      <footer id="footer" class="footer">
 
     <div class="container footer-top">
       <div class="row gy-4">
-        <div class="col-lg-3 col-md-6 footer-about">
+        <div class="col-lg-4 col-md-6 footer-about">
           <a href="/" class="logo d-flex align-items-center">
-            <span class="sitename">Education Foundation of BR</span>
+            <span class="sitename">Education Foundation of Bridgewater-Raritan</span>
           </a>
           <p>Supporting Bridgewater-Raritan students through grants, scholarships, and community partnerships.</p>
           <div class="footer-contact pt-3">
@@ -322,7 +424,6 @@
             <li><a href="/about-us/">About Us</a></li>
             <li><a href="/trustees/">Trustees</a></li>
             <li><a href="/faq/">FAQ</a></li>
-            <li><a href="https://edfoundbr.org/category/news/" target="_blank" rel="noopener">News</a></li>
             <li><a href="/contact/">Contact</a></li>
           </ul>
         </div>
@@ -332,8 +433,6 @@
           <ul>
             <li><a href="/grants/">Grants</a></li>
             <li><a href="/grant-recipients/">Grant Recipients</a></li>
-            <li><a href="https://edfoundbr.org/grants/mini-grant-application/" target="_blank" rel="noopener">Mini-Grant Application</a></li>
-            <li><a href="https://edfoundbr.org/service-awards/" target="_blank" rel="noopener">Service Awards</a></li>
             <li><a href="/golf-outing/">Golf Outing</a></li>
           </ul>
         </div>
@@ -342,34 +441,28 @@
           <h4>Get Involved</h4>
           <ul>
             <li><a href="/support-us/">Support Us</a></li>
-            <li><a href="/support-us/#donate">Donate</a></li>
+            <li><a href="https://www.paypal.com/donate" target="_blank" rel="noopener">Donate</a></li>
             <li><a href="/support-us/#ways">Ways to Help</a></li>
-            <li><a href="/support-us/#mailing-list">Mailing List</a></li>
-            <li><a href="https://edfoundbr.org/how-to-help/" target="_blank" rel="noopener">How to Help</a></li>
           </ul>
         </div>
 
-        <div class="col-lg-3 col-md-6 footer-newsletter">
-          <h4>Stay Informed</h4>
-          <p>Get event updates, grant news, and community stories in your inbox.</p>
-          <form class="footer-newsletter-form" data-form-service="mailchimp" data-form-name="footer_newsletter">
-            <input type="email" class="form-control" name="EMAIL" placeholder="Email address" autocomplete="email" required>
-            <button type="submit" class="btn-subscribe">Join</button>
-          </form>
-          <p class="footer-newsletter-note">We respect your inbox. Unsubscribe anytime.</p>
-          <p class="footer-newsletter-link">
-            <a href="https://edfoundbr.org/stay-informed/" target="_blank" rel="noopener">Official Stay Informed page</a>
-          </p>
+        <div class="col-lg-2 col-md-6 footer-links">
+          <h4>Resources</h4>
+          <ul>
+            <li><a href="https://edfoundbr.org/category/news/" target="_blank" rel="noopener">News</a></li>
+            <li><a href="https://edfoundbr.org/grants/mini-grant-application/" target="_blank" rel="noopener">Mini-Grant Application</a></li>
+            <li><a href="https://edfoundbr.org/service-awards/" target="_blank" rel="noopener">Service Awards</a></li>
+          </ul>
         </div>
-
       </div>
     </div>
 
     <div class="container copyright text-center mt-4">
-      <p>© <span>Education Foundation of Bridgewater-Raritan</span> <span>All Rights Reserved</span></p>
+      <p>&copy; <span>Education Foundation of Bridgewater-Raritan</span> <span>All Rights Reserved</span></p>
     </div>
 
   </footer>
+
 
   <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
 
@@ -379,6 +472,7 @@
   <script src="../assets/vendor/glightbox/js/glightbox.min.js"></script>
   <script src="../assets/vendor/swiper/swiper-bundle.min.js"></script>
   <script src="../assets/vendor/purecounter/purecounter_vanilla.js"></script>
+  <script src="https://www.paypal.com/sdk/js?client-id=BAAHEyQC7qT0_l3fxg-p59xggCEitsrqIAAdbXbpjzJEgw4sjUewj_HL31xRC9bezTePAbXLoBoabgtBy0&components=hosted-buttons&enable-funding=venmo&currency=USD"></script>
 
   <script src="../assets/js/main.js"></script>
 
@@ -386,4 +480,3 @@
 </body>
 
 </html>
- 
