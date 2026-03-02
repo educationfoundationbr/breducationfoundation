@@ -1,0 +1,24 @@
+{
+  "redirects": [
+    {
+      "source": "/product/golf-sponsor",
+      "destination": "/golf/",
+      "permanent": true
+    },
+    {
+      "source": "/product/golf-sponsor/:path*",
+      "destination": "/golf/",
+      "permanent": true
+    },
+    {
+      "source": "/golf-outing",
+      "destination": "/golf/",
+      "permanent": true
+    },
+    {
+      "source": "/golf-outing/:path*",
+      "destination": "/golf/",
+      "permanent": true
+    }
+  ]
+}
