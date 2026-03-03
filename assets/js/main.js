@@ -14,20 +14,20 @@
    */
   const integrationDefaults = {
     googleCloud: {
-      defaultEndpoint: "https://script.google.com/macros/s/AKfycbzWFScvKQyBYWnPIcVj17wUF0XsGBITJz3TdKl-DgeeARrzpnUxn2nZDLkKyRD2HaX4PA/exec",
+      defaultEndpoint: "https://script.google.com/macros/s/AKfycbwn3EcwdvT2JxakSoP29kdG7JgayS6kQus-CXFLs-V0RAbt2MQsJjf_jZhQ184oT5bSiw/exec",
       endpoints: {
-        grant_application: "https://script.google.com/macros/s/AKfycbzWFScvKQyBYWnPIcVj17wUF0XsGBITJz3TdKl-DgeeARrzpnUxn2nZDLkKyRD2HaX4PA/exec?action=grant_application",
-        support_donation: "https://script.google.com/macros/s/AKfycbzWFScvKQyBYWnPIcVj17wUF0XsGBITJz3TdKl-DgeeARrzpnUxn2nZDLkKyRD2HaX4PA/exec?action=support_donation",
-        golf_registration: "https://script.google.com/macros/s/AKfycbzWFScvKQyBYWnPIcVj17wUF0XsGBITJz3TdKl-DgeeARrzpnUxn2nZDLkKyRD2HaX4PA/exec?action=precheckout",
-        golf_sponsorship: "https://script.google.com/macros/s/AKfycbzWFScvKQyBYWnPIcVj17wUF0XsGBITJz3TdKl-DgeeARrzpnUxn2nZDLkKyRD2HaX4PA/exec?action=precheckout",
-        golf_bbq: "https://script.google.com/macros/s/AKfycbzWFScvKQyBYWnPIcVj17wUF0XsGBITJz3TdKl-DgeeARrzpnUxn2nZDLkKyRD2HaX4PA/exec?action=precheckout"
+        grant_application: "https://script.google.com/macros/s/AKfycbwn3EcwdvT2JxakSoP29kdG7JgayS6kQus-CXFLs-V0RAbt2MQsJjf_jZhQ184oT5bSiw/exec?action=grant_application",
+        support_donation: "https://script.google.com/macros/s/AKfycbwn3EcwdvT2JxakSoP29kdG7JgayS6kQus-CXFLs-V0RAbt2MQsJjf_jZhQ184oT5bSiw/exec?action=support_donation",
+        golf_registration: "https://script.google.com/macros/s/AKfycbwn3EcwdvT2JxakSoP29kdG7JgayS6kQus-CXFLs-V0RAbt2MQsJjf_jZhQ184oT5bSiw/exec?action=precheckout",
+        golf_sponsorship: "https://script.google.com/macros/s/AKfycbwn3EcwdvT2JxakSoP29kdG7JgayS6kQus-CXFLs-V0RAbt2MQsJjf_jZhQ184oT5bSiw/exec?action=precheckout",
+        golf_bbq: "https://script.google.com/macros/s/AKfycbwn3EcwdvT2JxakSoP29kdG7JgayS6kQus-CXFLs-V0RAbt2MQsJjf_jZhQ184oT5bSiw/exec?action=precheckout"
       },
       apiKey: "",
       authToken: "",
       headers: {}
     },
     contact: {
-      endpoint: "https://script.google.com/macros/s/AKfycbzWFScvKQyBYWnPIcVj17wUF0XsGBITJz3TdKl-DgeeARrzpnUxn2nZDLkKyRD2HaX4PA/exec?action=contact",
+      endpoint: "https://script.google.com/macros/s/AKfycbwn3EcwdvT2JxakSoP29kdG7JgayS6kQus-CXFLs-V0RAbt2MQsJjf_jZhQ184oT5bSiw/exec?action=contact",
       apiKey: "",
       authToken: "",
       headers: {}
@@ -159,6 +159,20 @@
       return notification.error || notification.reason || "email notification failed";
     }
     return "";
+  }
+
+  function getGcloudFormMessages(form) {
+    const formName = String(form.dataset.formName || "").toLowerCase();
+    if (formName === "grant_application") {
+      return {
+        pending: "Submitting your grant application...",
+        success: "Your Mini Grant application was submitted successfully. Please save a copy of your details for your records."
+      };
+    }
+    return {
+      pending: "Submitting...",
+      success: "Thanks! We received your submission."
+    };
   }
 
   /**
@@ -630,8 +644,9 @@
         submitButton.disabled = true;
       }
 
+      const messages = getGcloudFormMessages(form);
       setInlineState(form, "loading");
-      setStatus(form, "Submitting...", "pending");
+      setStatus(form, messages.pending, "pending");
 
       const headers = {
         ...integrations.googleCloud.headers
@@ -646,11 +661,11 @@
       try {
         const result = await submitJsonForm(form, endpoint, headers);
         const notificationIssue = getNotificationIssue(result);
-        setInlineState(form, "success", "Thanks! We received your submission.");
+        setInlineState(form, "success", messages.success);
         if (notificationIssue) {
           setStatus(form, `Submission saved, but notification email failed: ${notificationIssue}`, "pending");
         } else {
-          setStatus(form, "Thanks! We received your submission.", "success");
+          setStatus(form, messages.success, "success");
         }
         form.reset();
       } catch (error) {

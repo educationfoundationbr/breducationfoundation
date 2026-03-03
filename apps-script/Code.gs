@@ -40,6 +40,9 @@ const PAYPAL_HEADERS = [
   "resource_id",
   "resource_status",
   "custom_id",
+  "matched_button_id",
+  "matched_button_label",
+  "matched_program",
   "payer_name",
   "payer_email",
   "amount",
@@ -110,6 +113,33 @@ const COMPLETED_PAYPAL_EVENT_TYPES = [
   "CHECKOUT.ORDER.COMPLETED",
   "PAYMENT.SALE.COMPLETED"
 ];
+
+const KNOWN_PAYPAL_BUTTONS = {
+  "G9GBYZCYQ8ABQ": {
+    label: "Volleyball Title Sponsor",
+    program: "club_volleyball"
+  },
+  "LMZ88RS8UQSQ8": {
+    label: "Volleyball Event Sponsor",
+    program: "club_volleyball"
+  },
+  "BWZS74CHRBNLL": {
+    label: "Volleyball Spike Sponsor",
+    program: "club_volleyball"
+  },
+  "XYXKKRKSN49BN": {
+    label: "Volleyball 3 Sign Sponsor",
+    program: "club_volleyball"
+  },
+  "Z85TGND7LA7QQ": {
+    label: "Volleyball 1 Sign Sponsor",
+    program: "club_volleyball"
+  },
+  "FVX9BUW6EAWMQ": {
+    label: "Support Us Donation",
+    program: "support_us"
+  }
+};
 
 function doGet(e) {
   return json_({
@@ -244,6 +274,8 @@ function handlePaypalWebhook_(e) {
   ].filter(function(v) { return !!v; }).join(" ");
   const purchaseList = summarizePurchaseList_(purchaseUnits);
   const purchaseUnitsJson = purchaseUnits.length ? JSON.stringify(purchaseUnits) : "";
+  const matchedButton = detectKnownPaypalButton_(event, raw);
+  const customId = normalizeValue_(resource.custom_id || pu0.custom_id || resource.invoice_id);
 
   const eventType = normalizeValue_(event.event_type).toUpperCase();
   const resourceStatus = normalizeValue_(resource.status || capture0.status || "").toUpperCase();
@@ -277,7 +309,10 @@ function handlePaypalWebhook_(e) {
     normalizeValue_(event.event_time || event.create_time),
     normalizeValue_(resource.id || capture0.id),
     normalizeValue_(resource.status || capture0.status),
-    normalizeValue_(resource.custom_id || pu0.custom_id || resource.invoice_id),
+    customId,
+    normalizeValue_(matchedButton.id),
+    normalizeValue_(matchedButton.label),
+    normalizeValue_(matchedButton.program),
     normalizeValue_(payerName),
     normalizeValue_((resource.payer && resource.payer.email_address) || ""),
     normalizeValue_(amountObj.value),
@@ -292,7 +327,10 @@ function handlePaypalWebhook_(e) {
     eventType: normalizeValue_(event.event_type),
     eventTime: normalizeValue_(event.event_time || event.create_time),
     resourceId: normalizeValue_(resource.id || capture0.id),
-    customId: normalizeValue_(resource.custom_id || pu0.custom_id || resource.invoice_id),
+    customId: customId,
+    matchedButtonId: normalizeValue_(matchedButton.id),
+    matchedButtonLabel: normalizeValue_(matchedButton.label),
+    matchedProgram: normalizeValue_(matchedButton.program),
     payerName: normalizeValue_(payerName),
     payerEmail: normalizeValue_((resource.payer && resource.payer.email_address) || ""),
     amount: normalizeValue_(amountObj.value),
@@ -573,6 +611,9 @@ function trySendPaypalEventNotification_(cfg, eventData) {
       "Event Time: " + normalizeValue_(eventData.eventTime),
       "Resource ID: " + normalizeValue_(eventData.resourceId),
       "Custom ID: " + normalizeValue_(eventData.customId),
+      "Matched Button ID: " + normalizeValue_(eventData.matchedButtonId),
+      "Matched Button Label: " + normalizeValue_(eventData.matchedButtonLabel),
+      "Matched Program: " + normalizeValue_(eventData.matchedProgram),
       "Payer Name: " + normalizeValue_(eventData.payerName),
       "Payer Email: " + normalizeValue_(eventData.payerEmail),
       "Amount: " + normalizeValue_(eventData.amount),
@@ -628,6 +669,51 @@ function summarizePurchaseList_(purchaseUnits) {
     return chunks.join(" | ");
   });
   return summaries.join(" || ");
+}
+
+function detectKnownPaypalButton_(event, raw) {
+  const resource = event && event.resource ? event.resource : {};
+  const purchaseUnits = Array.isArray(resource.purchase_units) ? resource.purchase_units : [];
+  const sourceParts = [
+    normalizeValue_(resource.custom_id),
+    normalizeValue_(resource.invoice_id),
+    normalizeValue_(resource.id),
+    normalizeValue_(event && event.id),
+    normalizeValue_(event && event.summary),
+    normalizeValue_(event && event.resource_type)
+  ];
+
+  purchaseUnits.forEach(function(unit) {
+    sourceParts.push(normalizeValue_(unit && unit.custom_id));
+    sourceParts.push(normalizeValue_(unit && unit.invoice_id));
+    sourceParts.push(normalizeValue_(unit && unit.reference_id));
+    sourceParts.push(normalizeValue_(unit && unit.description));
+
+    const items = Array.isArray(unit && unit.items) ? unit.items : [];
+    items.forEach(function(item) {
+      sourceParts.push(normalizeValue_(item && item.name));
+      sourceParts.push(normalizeValue_(item && item.sku));
+      sourceParts.push(normalizeValue_(item && item.description));
+    });
+  });
+
+  sourceParts.push(normalizeValue_(raw));
+  const haystack = sourceParts.join(" ").toUpperCase();
+  const knownIds = Object.keys(KNOWN_PAYPAL_BUTTONS);
+
+  for (var i = 0; i < knownIds.length; i++) {
+    const buttonId = knownIds[i];
+    if (haystack.indexOf(buttonId.toUpperCase()) !== -1) {
+      const meta = KNOWN_PAYPAL_BUTTONS[buttonId] || {};
+      return {
+        id: buttonId,
+        label: normalizeValue_(meta.label),
+        program: normalizeValue_(meta.program)
+      };
+    }
+  }
+
+  return { id: "", label: "", program: "" };
 }
 
 function isExistingPaypalEventId_(sheet, eventId) {
