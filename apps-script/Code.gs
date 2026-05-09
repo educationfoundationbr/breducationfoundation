@@ -3,6 +3,14 @@ const PAYPAL_EVENTS_SHEET = "PayPalEvents";
 const CONTACT_SHEET = "ContactMessages";
 const GRANTS_SHEET = "GrantApplications";
 const DONATIONS_SHEET = "SupportDonations";
+const FORM_SUBMISSION_TOKEN = "efbr-public-form-v2";
+const ALLOWED_PAGE_HOSTS = [
+  "www.edfoundbr.org",
+  "edfoundbr.org",
+  "breducationfoundation.vercel.app",
+  "localhost",
+  "127.0.0.1"
+];
 
 const PRECHECKOUT_HEADERS = [
   "timestamp",
@@ -115,6 +123,30 @@ const COMPLETED_PAYPAL_EVENT_TYPES = [
 ];
 
 const KNOWN_PAYPAL_BUTTONS = {
+  "JXGD7Q2CWLYVN": {
+    label: "Golf Registration - Foursome",
+    program: "golf_outing"
+  },
+  "ZQK7S4U4T4LDW": {
+    label: "Golf Registration - One Golfer",
+    program: "golf_outing"
+  },
+  "YKLYJSK4YKQP8": {
+    label: "$500 - $10K Hole-in-One Sponsor",
+    program: "golf_outing"
+  },
+  "Q9CR5NS6W5FCE": {
+    label: "$100 - 3 Hole Sponsor",
+    program: "golf_outing"
+  },
+  "JKMRADQ3F9SCJ": {
+    label: "$50 - 1 Hole Sponsor",
+    program: "golf_outing"
+  },
+  "VNGH4WERSBPUA": {
+    label: "BBQ Dinner",
+    program: "golf_outing"
+  },
   "G9GBYZCYQ8ABQ": {
     label: "Volleyball Title Sponsor",
     program: "club_volleyball"
@@ -151,13 +183,16 @@ function doGet(e) {
 
 function doPost(e) {
   try {
-    const action = ((e.parameter && e.parameter.action) || "").toLowerCase();
+    const action = getAction_(e);
 
     if (action === "precheckout") {
       return handlePrecheckout_(e);
     }
     if (action === "paypal_webhook") {
       return handlePaypalWebhook_(e);
+    }
+    if (action === "paypal_return") {
+      return handlePaypalReturn_(e);
     }
     if (action === "contact") {
       return handleContact_(e);
@@ -175,6 +210,7 @@ function doPost(e) {
       supported_actions: [
         "precheckout",
         "paypal_webhook",
+        "paypal_return",
         "contact",
         "grant_application",
         "support_donation"
@@ -183,6 +219,27 @@ function doPost(e) {
   } catch (err) {
     return json_({ ok: false, error: String(err) });
   }
+}
+
+function getAction_(e) {
+  const explicitAction = ((e && e.parameter && e.parameter.action) || "").toLowerCase();
+  if (explicitAction) return explicitAction;
+
+  let payload = {};
+  try {
+    payload = parsePayload_(e);
+  } catch (err) {
+    payload = {};
+  }
+
+  if (payload && payload.event_type && payload.resource) {
+    return "paypal_webhook";
+  }
+  if (payload && (payload.transactionId || payload.tx || payload.transaction_id) && payload.status) {
+    return "paypal_return";
+  }
+
+  return "";
 }
 
 function setupProject() {
@@ -196,12 +253,16 @@ function setupProject() {
 }
 
 function handlePrecheckout_(e) {
+  const payload = parsePayload_(e);
+  const guard = guardPublicSubmission_(payload, "precheckout");
+  if (!guard.ok) return rejectedSubmission_(guard);
+  if (guard.duplicate) return json_({ ok: true, duplicate: true });
+
   const cfg = getConfig_();
   const ss = SpreadsheetApp.openById(cfg.sheetId);
   const sheet = getOrCreateSheet_(ss, PRECHECKOUT_SHEET, PRECHECKOUT_HEADERS);
 
-  const payload = parsePayload_(e);
-  const submissionId = payload.submissionId || Utilities.getUuid();
+  const submissionId = normalizeValue_(payload.submissionId) || Utilities.getUuid();
 
   let logoMeta = { id: "", url: "", name: "" };
   if (payload.logoDataUrl) {
@@ -219,7 +280,7 @@ function handlePrecheckout_(e) {
   sheet.appendRow([
     new Date(),
     submissionId,
-    "precheckout_saved",
+    "checkout_started",
     normalizeValue_(payload.form_name),
     normalizeValue_(payload.timestamp),
     normalizeValue_(payload.checkoutType),
@@ -265,7 +326,7 @@ function handlePaypalWebhook_(e) {
   const resource = event.resource || {};
   const purchaseUnits = Array.isArray(resource.purchase_units) ? resource.purchase_units : [];
   const pu0 = purchaseUnits[0] || {};
-  const capture0 = (resource.captures && resource.captures[0]) ? resource.captures[0] : {};
+  const capture0 = findFirstCapture_(resource);
   const amountObj = resource.amount || pu0.amount || capture0.amount || {};
   const payer = resource.payer || {};
   const payerName = [
@@ -275,7 +336,7 @@ function handlePaypalWebhook_(e) {
   const purchaseList = summarizePurchaseList_(purchaseUnits);
   const purchaseUnitsJson = purchaseUnits.length ? JSON.stringify(purchaseUnits) : "";
   const matchedButton = detectKnownPaypalButton_(event, raw);
-  const customId = normalizeValue_(resource.custom_id || pu0.custom_id || resource.invoice_id);
+  const customId = normalizeValue_(resource.custom_id || pu0.custom_id || capture0.custom_id || resource.invoice_id || pu0.invoice_id);
 
   const eventType = normalizeValue_(event.event_type).toUpperCase();
   const resourceStatus = normalizeValue_(resource.status || capture0.status || "").toUpperCase();
@@ -322,6 +383,10 @@ function handlePaypalWebhook_(e) {
     raw
   ]);
 
+  if (customId) {
+    updatePrecheckoutStatus_(ss, customId, "payment_webhook_completed");
+  }
+
   const notification = trySendPaypalEventNotification_(cfg, {
     eventId: eventId,
     eventType: normalizeValue_(event.event_type),
@@ -344,11 +409,109 @@ function handlePaypalWebhook_(e) {
   return json_({ ok: true, notification: notification });
 }
 
+function handlePaypalReturn_(e) {
+  const payload = parsePayload_(e);
+  const guard = guardPublicSubmission_(payload, "paypal_return");
+  if (!guard.ok) return rejectedSubmission_(guard);
+  if (guard.duplicate) return json_({ ok: true, duplicate: true });
+
+  const cfg = getConfig_();
+  const ss = SpreadsheetApp.openById(cfg.sheetId);
+  const sheet = getOrCreateSheet_(ss, PAYPAL_EVENTS_SHEET, PAYPAL_HEADERS);
+  const transactionId = normalizeValue_(payload.transactionId || payload.tx || payload.transaction_id);
+  const status = normalizeValue_(payload.status || payload.st || "COMPLETED");
+  const submissionId = normalizeValue_(payload.submissionId);
+  const buttonId = normalizeValue_(payload.paypalButtonId);
+  const buttonMeta = buttonId && KNOWN_PAYPAL_BUTTONS[buttonId] ? KNOWN_PAYPAL_BUTTONS[buttonId] : {};
+  const checkoutLabel = normalizeValue_(
+    payload.checkoutOption ||
+    payload.registrationPackage ||
+    payload.sponsorLevel ||
+    buttonMeta.label ||
+    payload.checkoutType
+  );
+  const eventId = transactionId ? "return:" + transactionId : "return:" + Utilities.getUuid();
+  const eventType = "PAYPAL.RETURN.REPORTED_COMPLETED";
+
+  if (isExistingPaypalEventId_(sheet, eventId)) {
+    return json_({
+      ok: true,
+      duplicate: true,
+      event_id: eventId
+    });
+  }
+
+  const purchaseList = [
+    normalizeValue_(payload.checkoutType),
+    checkoutLabel,
+    normalizeValue_(payload.registrationPackage),
+    normalizeValue_(payload.sponsorLevel),
+    normalizeValue_(payload.guestNames)
+  ].filter(function(x, idx, arr) {
+    return !!x && arr.indexOf(x) === idx;
+  }).join(" | ");
+
+  const raw = serializePayloadForStorage_(payload);
+  sheet.appendRow([
+    new Date(),
+    eventId,
+    eventType,
+    normalizeValue_(payload.timestamp),
+    transactionId,
+    status,
+    submissionId,
+    buttonId,
+    checkoutLabel,
+    normalizeValue_(buttonMeta.program || "golf_outing"),
+    normalizeValue_(payload.fullName),
+    normalizeValue_(payload.email),
+    normalizeValue_(payload.amount),
+    normalizeValue_(payload.currency),
+    purchaseList,
+    normalizeValue_(payload.precheckout),
+    raw
+  ]);
+
+  if (submissionId) {
+    updatePrecheckoutStatus_(ss, submissionId, "paypal_return_seen");
+  }
+
+  const notification = trySendPaypalEventNotification_(cfg, {
+    eventId: eventId,
+    eventType: eventType,
+    eventTime: normalizeValue_(payload.timestamp),
+    resourceId: transactionId,
+    customId: submissionId,
+    matchedButtonId: buttonId,
+    matchedButtonLabel: checkoutLabel,
+    matchedProgram: normalizeValue_(buttonMeta.program || "golf_outing"),
+    payerName: normalizeValue_(payload.fullName),
+    payerEmail: normalizeValue_(payload.email),
+    amount: normalizeValue_(payload.amount),
+    currency: normalizeValue_(payload.currency),
+    resourceStatus: status,
+    purchaseList: purchaseList,
+    purchaseUnitsJson: normalizeValue_(payload.precheckout),
+    raw: raw
+  });
+
+  return json_({
+    ok: true,
+    event_id: eventId,
+    precheckout_status_updated: !!submissionId,
+    notification: notification
+  });
+}
+
 function handleContact_(e) {
+  const payload = parsePayload_(e);
+  const guard = guardPublicSubmission_(payload, "contact");
+  if (!guard.ok) return rejectedSubmission_(guard);
+  if (guard.duplicate) return json_({ ok: true, duplicate: true });
+
   const cfg = getConfig_();
   const ss = SpreadsheetApp.openById(cfg.sheetId);
   const sheet = getOrCreateSheet_(ss, CONTACT_SHEET, CONTACT_HEADERS);
-  const payload = parsePayload_(e);
 
   sheet.appendRow([
     new Date(),
@@ -366,10 +529,14 @@ function handleContact_(e) {
 }
 
 function handleGrantApplication_(e) {
+  const payload = parsePayload_(e);
+  const guard = guardPublicSubmission_(payload, "grant_application");
+  if (!guard.ok) return rejectedSubmission_(guard);
+  if (guard.duplicate) return json_({ ok: true, duplicate: true });
+
   const cfg = getConfig_();
   const ss = SpreadsheetApp.openById(cfg.sheetId);
   const sheet = getOrCreateSheet_(ss, GRANTS_SHEET, GRANTS_HEADERS);
-  const payload = parsePayload_(e);
 
   sheet.appendRow([
     new Date(),
@@ -408,10 +575,14 @@ function handleGrantApplication_(e) {
 }
 
 function handleSupportDonation_(e) {
+  const payload = parsePayload_(e);
+  const guard = guardPublicSubmission_(payload, "support_donation");
+  if (!guard.ok) return rejectedSubmission_(guard);
+  if (guard.duplicate) return json_({ ok: true, duplicate: true });
+
   const cfg = getConfig_();
   const ss = SpreadsheetApp.openById(cfg.sheetId);
   const sheet = getOrCreateSheet_(ss, DONATIONS_SHEET, DONATIONS_HEADERS);
-  const payload = parsePayload_(e);
 
   sheet.appendRow([
     new Date(),
@@ -427,6 +598,233 @@ function handleSupportDonation_(e) {
   ]);
 
   return json_({ ok: true });
+}
+
+function guardPublicSubmission_(payload, action) {
+  const validationReason = validatePublicSubmission_(payload, action);
+  if (validationReason) {
+    return { ok: false, reason: validationReason };
+  }
+
+  const spamReason = detectSpamSubmission_(payload, action);
+  if (spamReason) {
+    return { ok: false, reason: spamReason };
+  }
+
+  const duplicateKey = buildDuplicateCacheKey_(payload, action);
+  if (duplicateKey && isDuplicateSubmission_(duplicateKey, getDuplicateTtlSeconds_(action))) {
+    return { ok: true, duplicate: true };
+  }
+
+  return { ok: true };
+}
+
+function rejectedSubmission_(guard) {
+  return json_({
+    ok: false,
+    error: "Submission could not be accepted. Please review the form and try again."
+  });
+}
+
+function validatePublicSubmission_(payload, action) {
+  if (!payload || typeof payload !== "object") return "empty_payload";
+
+  const token = normalizeValue_(payload.form_submission_token);
+  if (token !== FORM_SUBMISSION_TOKEN) return "missing_form_token";
+
+  if (hasFilledHoneypot_(payload)) return "honeypot_filled";
+
+  if (!isAllowedPageUrl_(payload.page_url || payload.pageUrl)) {
+    return "untrusted_page_url";
+  }
+
+  const startedAt = Date.parse(normalizeValue_(payload.form_started_at));
+  if (!startedAt || isNaN(startedAt)) return "missing_form_started_at";
+  const minimumAgeMs = getMinimumFormAgeMs_(action);
+  if (Date.now() - startedAt < minimumAgeMs) return "submitted_too_quickly";
+
+  if (action === "contact") {
+    if (!hasText_(payload.name) || !hasText_(payload.email) || !hasText_(payload.subject) || !hasText_(payload.message)) {
+      return "missing_contact_fields";
+    }
+    if (!isValidEmail_(payload.email)) return "invalid_email";
+  }
+
+  if (action === "precheckout") {
+    if (!hasText_(payload.fullName) || !hasText_(payload.email) || !hasText_(payload.phone)) {
+      return "missing_precheckout_contact_fields";
+    }
+    if (!isValidEmail_(payload.email)) return "invalid_email";
+    if (!hasLikelyPhone_(payload.phone)) return "invalid_phone";
+    if (!hasText_(payload.checkoutType) || !hasText_(payload.paypalButtonId) || !hasText_(payload.amount)) {
+      return "missing_checkout_fields";
+    }
+    const buttonMeta = KNOWN_PAYPAL_BUTTONS[normalizeValue_(payload.paypalButtonId)];
+    if (!buttonMeta || buttonMeta.program !== "golf_outing") return "unknown_golf_paypal_button";
+
+    const formName = normalizeValue_(payload.form_name).toLowerCase();
+    if (formName.indexOf("registration") !== -1 && !hasText_(payload.registrationPackage)) {
+      return "missing_registration_package";
+    }
+    if (formName.indexOf("sponsorship") !== -1) {
+      if (!hasText_(payload.sponsorLevel) || !hasText_(payload.organization) || !hasText_(payload.sponsorText)) {
+        return "missing_sponsorship_fields";
+      }
+    }
+  }
+
+  if (action === "paypal_return") {
+    if (!hasText_(payload.transactionId || payload.tx || payload.transaction_id)) return "missing_transaction_id";
+    const status = normalizeValue_(payload.status || payload.st).toUpperCase();
+    if (status && status !== "COMPLETED") return "paypal_return_not_completed";
+  }
+
+  if (action === "grant_application") {
+    if (!hasText_(payload.grant_title) || !hasText_(payload.contact_email)) return "missing_grant_fields";
+    if (!isValidEmail_(payload.contact_email)) return "invalid_email";
+  }
+
+  if (action === "support_donation") {
+    if (hasText_(payload.email) && !isValidEmail_(payload.email)) return "invalid_email";
+  }
+
+  return "";
+}
+
+function hasFilledHoneypot_(payload) {
+  const fields = ["website", "companyWebsite", "fax", "faxNumber", "url"];
+  return fields.some(function(field) {
+    return hasText_(payload[field]);
+  });
+}
+
+function isAllowedPageUrl_(url) {
+  const host = getHostFromUrl_(url);
+  if (!host) return false;
+  return ALLOWED_PAGE_HOSTS.indexOf(host) !== -1;
+}
+
+function getHostFromUrl_(url) {
+  const match = normalizeValue_(url).match(/^https?:\/\/([^\/?#:]+)/i);
+  return match ? match[1].toLowerCase() : "";
+}
+
+function getMinimumFormAgeMs_(action) {
+  if (action === "grant_application") return 3000;
+  if (action === "paypal_return") return 1000;
+  return 1500;
+}
+
+function hasText_(value) {
+  return normalizeValue_(value).trim().length > 0;
+}
+
+function isValidEmail_(email) {
+  const value = normalizeValue_(email).trim();
+  return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(value) && value.length <= 254;
+}
+
+function hasLikelyPhone_(phone) {
+  return normalizeValue_(phone).replace(/\D/g, "").length >= 7;
+}
+
+function detectSpamSubmission_(payload, action) {
+  const fields = [
+    payload.name,
+    payload.subject,
+    payload.message,
+    payload.fullName,
+    payload.organization,
+    payload.sponsorText,
+    payload.notes,
+    payload.guestNames
+  ].map(normalizeValue_).filter(function(value) {
+    return !!value;
+  });
+
+  const randomLookingCount = fields.filter(looksLikeRandomToken_).length;
+  if (randomLookingCount >= 2) return "random_text_fields";
+
+  if (action === "contact" && looksLikeRandomToken_(payload.name) && looksLikeRandomToken_(payload.subject)) {
+    return "random_contact_fields";
+  }
+
+  if (action === "precheckout" && looksLikeRandomToken_(payload.fullName) && looksLikeRandomToken_(payload.guestNames || payload.notes || payload.organization)) {
+    return "random_precheckout_fields";
+  }
+
+  return "";
+}
+
+function looksLikeRandomToken_(value) {
+  const text = normalizeValue_(value).trim();
+  if (text.length < 16 || /\s/.test(text)) return false;
+  if (!/^[A-Za-z]+$/.test(text)) return false;
+
+  const letters = text.split("");
+  const uppercase = letters.filter(function(ch) { return ch >= "A" && ch <= "Z"; }).length;
+  const lowercase = letters.filter(function(ch) { return ch >= "a" && ch <= "z"; }).length;
+  if (uppercase < 3 || lowercase < 5) return false;
+
+  let transitions = 0;
+  for (var i = 1; i < letters.length; i++) {
+    const prevUpper = letters[i - 1] >= "A" && letters[i - 1] <= "Z";
+    const nextUpper = letters[i] >= "A" && letters[i] <= "Z";
+    if (prevUpper !== nextUpper) transitions++;
+  }
+
+  const vowels = text.match(/[aeiou]/gi);
+  const vowelRatio = vowels ? vowels.length / text.length : 0;
+  return transitions >= 8 && vowelRatio < 0.45;
+}
+
+function buildDuplicateCacheKey_(payload, action) {
+  const parts = [action];
+
+  if (action === "contact") {
+    parts.push(payload.email, payload.name, payload.subject, payload.message);
+  } else if (action === "precheckout") {
+    parts.push(payload.email, payload.fullName, payload.phone, payload.paypalButtonId, payload.checkoutOption, payload.registrationPackage, payload.sponsorLevel, payload.guestNames, payload.notes);
+  } else if (action === "paypal_return") {
+    parts.push(payload.transactionId || payload.tx || payload.transaction_id);
+  } else if (action === "grant_application") {
+    parts.push(payload.contact_email, payload.grant_title, payload.amount_requested);
+  } else if (action === "support_donation") {
+    parts.push(payload.email, payload.donation_amount, payload.first_name, payload.last_name);
+  }
+
+  const normalized = parts.map(function(part) {
+    return normalizeValue_(part).trim().toLowerCase();
+  }).join("|");
+
+  if (normalized.length < 12) return "";
+  return "efbr:" + action + ":" + sha256Hex_(normalized).slice(0, 40);
+}
+
+function getDuplicateTtlSeconds_(action) {
+  if (action === "paypal_return") return 21600;
+  if (action === "contact") return 600;
+  if (action === "grant_application") return 3600;
+  return 300;
+}
+
+function isDuplicateSubmission_(cacheKey, ttlSeconds) {
+  try {
+    const cache = CacheService.getScriptCache();
+    if (cache.get(cacheKey)) return true;
+    cache.put(cacheKey, "1", ttlSeconds);
+  } catch (err) {
+    return false;
+  }
+  return false;
+}
+
+function sha256Hex_(value) {
+  const bytes = Utilities.computeDigest(Utilities.DigestAlgorithm.SHA_256, value);
+  return bytes.map(function(byte) {
+    const v = byte < 0 ? byte + 256 : byte;
+    return ("0" + v.toString(16)).slice(-2);
+  }).join("");
 }
 
 function parsePayload_(e) {
@@ -484,7 +882,46 @@ function serializePayloadForStorage_(payload) {
   if (copy.logoFile && typeof copy.logoFile === "object") {
     copy.logoFile = "[omitted_file_object]";
   }
+  if (copy.form_submission_token) {
+    copy.form_submission_token = "[omitted_form_token]";
+  }
   return JSON.stringify(copy);
+}
+
+function findFirstCapture_(resource) {
+  if (!resource || typeof resource !== "object") return {};
+  if (Array.isArray(resource.captures) && resource.captures.length) {
+    return resource.captures[0] || {};
+  }
+
+  const purchaseUnits = Array.isArray(resource.purchase_units) ? resource.purchase_units : [];
+  for (var i = 0; i < purchaseUnits.length; i++) {
+    const payments = purchaseUnits[i] && purchaseUnits[i].payments ? purchaseUnits[i].payments : {};
+    if (Array.isArray(payments.captures) && payments.captures.length) {
+      return payments.captures[0] || {};
+    }
+  }
+
+  return {};
+}
+
+function updatePrecheckoutStatus_(ss, submissionId, status) {
+  if (!submissionId) return false;
+  const sheet = ss.getSheetByName(PRECHECKOUT_SHEET);
+  if (!sheet) return false;
+
+  const lastRow = sheet.getLastRow();
+  if (lastRow < 2) return false;
+
+  const found = sheet
+    .getRange(2, 2, lastRow - 1, 1)
+    .createTextFinder(submissionId)
+    .matchEntireCell(true)
+    .findNext();
+
+  if (!found) return false;
+  sheet.getRange(found.getRow(), 3).setValue(status);
+  return true;
 }
 
 function trySendContactNotification_(cfg, payload) {

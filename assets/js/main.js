@@ -43,8 +43,15 @@
   };
 
   // remember: keep secrets out of this file
+  const FORM_SUBMISSION_TOKEN = "efbr-public-form-v2";
   const integrations = window.EFBRIntegrations || integrationDefaults;
   window.EFBRIntegrations = integrations;
+
+  document.querySelectorAll('form[data-form-service]').forEach((form) => {
+    if (!form.dataset.formStartedAt) {
+      form.dataset.formStartedAt = new Date().toISOString();
+    }
+  });
 
   function ensureStatus(form) {
     let status = form.querySelector(".form-status");
@@ -60,7 +67,7 @@
 
   function setStatus(form, message, type) {
     const status = ensureStatus(form);
-   status.textContent = message;
+    status.textContent = message;
     status.classList.remove("is-success", "is-error", "is-pending");
     if (type) {
       status.classList.add(`is-${type}`);
@@ -105,6 +112,9 @@
     payload.form_name = form.dataset.formName || form.getAttribute("name") || form.id || "form";
     payload.page_url = window.location.href;
     payload.timestamp = new Date().toISOString();
+    payload.form_started_at = form.dataset.formStartedAt || "";
+    payload.form_submission_token = FORM_SUBMISSION_TOKEN;
+    payload.user_agent = navigator.userAgent || "";
     return payload;
   }
 
@@ -411,6 +421,124 @@
       return base.indexOf("?") === -1 ? `${base}?action=precheckout` : `${base}&action=precheckout`;
     }
 
+    function resolveGoogleActionEndpoint(action) {
+      const base = integrations.googleCloud.defaultEndpoint || "";
+      if (!base) return "";
+      if (base.indexOf("action=") !== -1) return base;
+      return base.indexOf("?") === -1 ? `${base}?action=${action}` : `${base}&action=${action}`;
+    }
+
+    function createSubmissionId() {
+      if (window.crypto && typeof window.crypto.randomUUID === "function") {
+        return window.crypto.randomUUID();
+      }
+      return `efbr-${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;
+    }
+
+    function rememberPrecheckoutSubmission(payload) {
+      try {
+        const snapshot = {
+          submissionId: payload.submissionId || "",
+          formName: payload.form_name || "",
+          checkoutType: payload.checkoutType || "",
+          checkoutOption: payload.checkoutOption || "",
+          registrationPackage: payload.registrationPackage || "",
+          sponsorLevel: payload.sponsorLevel || "",
+          guestNames: payload.guestNames || "",
+          paypalButtonId: payload.paypalButtonId || "",
+          amount: payload.amount || "",
+          fullName: payload.fullName || "",
+          email: payload.email || "",
+          phone: payload.phone || "",
+          organization: payload.organization || "",
+          sponsorText: payload.sponsorText || "",
+          notes: payload.notes || "",
+          pageUrl: payload.pageUrl || payload.page_url || window.location.href,
+          storedAt: new Date().toISOString()
+        };
+        sessionStorage.setItem("efbr:lastPrecheckout", JSON.stringify(snapshot));
+      } catch (error) {
+        // Session storage can be unavailable in private browsing modes.
+      }
+    }
+
+    function getLastPrecheckoutSubmission() {
+      try {
+        const raw = sessionStorage.getItem("efbr:lastPrecheckout");
+        return raw ? JSON.parse(raw) : {};
+      } catch (error) {
+        return {};
+      }
+    }
+
+    function markPaypalReturnSeen(transactionId) {
+      try {
+        sessionStorage.setItem(`efbr:paypalReturn:${transactionId}`, "sent");
+      } catch (error) {
+      }
+    }
+
+    function hasSeenPaypalReturn(transactionId) {
+      try {
+        return sessionStorage.getItem(`efbr:paypalReturn:${transactionId}`) === "sent";
+      } catch (error) {
+        return false;
+      }
+    }
+
+    async function recordPaypalReturnIfPresent() {
+      const params = new URLSearchParams(window.location.search || "");
+      const transactionId = params.get("tx") || params.get("transaction_id") || params.get("txn_id") || "";
+      const status = params.get("st") || params.get("status") || "";
+      const normalizedStatus = status.toUpperCase();
+      if (!transactionId || (normalizedStatus && normalizedStatus !== "COMPLETED")) {
+        return;
+      }
+      if (hasSeenPaypalReturn(transactionId)) {
+        return;
+      }
+
+      const endpoint = resolveGoogleActionEndpoint("paypal_return");
+      if (!endpoint) {
+        return;
+      }
+
+      const previous = getLastPrecheckoutSubmission();
+      const payload = {
+        form_name: "paypal_return",
+        page_url: window.location.href,
+        timestamp: new Date().toISOString(),
+        form_started_at: previous.storedAt || new Date(Date.now() - 5000).toISOString(),
+        form_submission_token: FORM_SUBMISSION_TOKEN,
+        userAgent: navigator.userAgent || "",
+        transactionId: transactionId,
+        status: status || "COMPLETED",
+        amount: params.get("amt") || params.get("amount") || "",
+        currency: params.get("cc") || params.get("currency") || "",
+        submissionId: previous.submissionId || "",
+        checkoutType: previous.checkoutType || "",
+        checkoutOption: previous.checkoutOption || previous.registrationPackage || previous.sponsorLevel || "",
+        registrationPackage: previous.registrationPackage || "",
+        sponsorLevel: previous.sponsorLevel || "",
+        guestNames: previous.guestNames || "",
+        paypalButtonId: previous.paypalButtonId || "",
+        fullName: previous.fullName || "",
+        email: previous.email || "",
+        phone: previous.phone || "",
+        organization: previous.organization || "",
+        sponsorText: previous.sponsorText || "",
+        notes: previous.notes || "",
+        precheckout: previous
+      };
+
+      try {
+        await submitJsonForm(null, endpoint, getGoogleCloudHeaders(), payload);
+        markPaypalReturnSeen(transactionId);
+      } catch (error) {
+        // Keep checkout pages quiet; PayPal webhook remains the authoritative path.
+      }
+    }
+
     function readFileAsDataUrl(file) {
       return new Promise((resolve, reject) => {
         const reader = new FileReader();
@@ -500,7 +628,7 @@
           paypalButtonId: form.dataset.paypalButtonId || "",
           paypalTarget: form.dataset.paypalTarget || "",
           amount: form.dataset.amount || "",
-          optionLabel: "",
+          optionLabel: form.dataset.checkoutOption || form.dataset.checkoutType || "",
           hasSelect: false
         };
       }
@@ -570,6 +698,7 @@
           }
 
           const payload = formDataToObject(form);
+          payload.submissionId = createSubmissionId();
           if (payload.logoFile && typeof payload.logoFile === "object") {
             delete payload.logoFile;
           }
@@ -587,7 +716,11 @@
             payload.logoDataUrl = await readFileAsDataUrl(logoFile);
           }
 
-          await submitJsonForm(form, precheckoutEndpoint, getGoogleCloudHeaders(), payload);
+          const result = await submitJsonForm(form, precheckoutEndpoint, getGoogleCloudHeaders(), payload);
+          if (result && result.submissionId) {
+            payload.submissionId = result.submissionId;
+          }
+          rememberPrecheckoutSubmission(payload);
 
           const wrapper = document.querySelector(selectMeta.paypalTarget);
           if (!wrapper) {
@@ -613,6 +746,8 @@
         }
       });
     });
+
+    recordPaypalReturnIfPresent();
   }
 
   /**
@@ -680,7 +815,6 @@
   });
 
   document.querySelectorAll('form[data-form-service="contact"]').forEach((form) => {
-    // todo: add captcha hook if spam becomes an issue
     form.addEventListener("submit", async (event) => {
       event.preventDefault();
 
