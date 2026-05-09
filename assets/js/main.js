@@ -41,7 +41,7 @@
       }
     },
     turnstile: {
-      siteKey: ""
+      siteKey: "0x4AAAAAADML_2VI_XbJOqAV"
     }
   };
 
