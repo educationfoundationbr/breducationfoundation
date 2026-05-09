@@ -39,6 +39,9 @@
         id: "",
         f_id: ""
       }
+    },
+    turnstile: {
+      siteKey: ""
     }
   };
 
@@ -46,6 +49,7 @@
   const FORM_SUBMISSION_TOKEN = "efbr-public-form-v2";
   const integrations = window.EFBRIntegrations || integrationDefaults;
   window.EFBRIntegrations = integrations;
+  integrations.turnstile = integrations.turnstile || integrationDefaults.turnstile;
 
   document.querySelectorAll('form[data-form-service]').forEach((form) => {
     if (!form.dataset.formStartedAt) {
@@ -130,6 +134,109 @@
       }
       input.value = value;
     });
+  }
+
+  function getTurnstileSiteKey() {
+    return (integrations.turnstile && integrations.turnstile.siteKey) || "";
+  }
+
+  function shouldUseTurnstile(form) {
+    const service = form.dataset.formService || "";
+    return !!getTurnstileSiteKey() &&
+      form.dataset.turnstile !== "false" &&
+      ["contact", "precheckout", "gcloud"].indexOf(service) !== -1;
+  }
+
+  function loadTurnstileScript() {
+    if (window.turnstile) return Promise.resolve();
+    if (window.__efbrTurnstileLoading) return window.__efbrTurnstileLoading;
+
+    window.__efbrTurnstileLoading = new Promise((resolve, reject) => {
+      const script = document.createElement("script");
+      script.src = "https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit";
+      script.async = true;
+      script.defer = true;
+      script.onload = resolve;
+      script.onerror = () => reject(new Error("Security check failed to load. Please refresh and try again."));
+      document.head.appendChild(script);
+    });
+
+    return window.__efbrTurnstileLoading;
+  }
+
+  function getTurnstileTokenInput(form) {
+    let input = form.querySelector('input[name="cf-turnstile-response"]');
+    if (!input) {
+      input = document.createElement("input");
+      input.type = "hidden";
+      input.name = "cf-turnstile-response";
+      form.appendChild(input);
+    }
+    return input;
+  }
+
+  function getTurnstileWrap(form) {
+    let wrap = form.querySelector("[data-turnstile-wrap]");
+    if (wrap) return wrap;
+
+    wrap = document.createElement("div");
+    wrap.className = "turnstile-wrap";
+    wrap.setAttribute("data-turnstile-wrap", "");
+
+    const submitButton = form.querySelector('button[type="submit"]');
+    if (submitButton && submitButton.parentElement) {
+      submitButton.parentElement.insertBefore(wrap, submitButton);
+    } else {
+      form.appendChild(wrap);
+    }
+
+    return wrap;
+  }
+
+  function renderTurnstileForForm(form) {
+    if (!shouldUseTurnstile(form) || form.dataset.turnstileRendered === "true") return;
+
+    const tokenInput = getTurnstileTokenInput(form);
+    const widgetId = window.turnstile.render(getTurnstileWrap(form), {
+      sitekey: getTurnstileSiteKey(),
+      callback: (token) => {
+        tokenInput.value = token || "";
+      },
+      "expired-callback": () => {
+        tokenInput.value = "";
+      },
+      "error-callback": () => {
+        tokenInput.value = "";
+      }
+    });
+
+    form.dataset.turnstileWidgetId = String(widgetId);
+    form.dataset.turnstileRendered = "true";
+  }
+
+  function resetTurnstile(form) {
+    if (!shouldUseTurnstile(form) || !window.turnstile || !form.dataset.turnstileWidgetId) return;
+    getTurnstileTokenInput(form).value = "";
+    window.turnstile.reset(form.dataset.turnstileWidgetId);
+  }
+
+  function hasTurnstileToken(form) {
+    if (!shouldUseTurnstile(form)) return true;
+    return !!getTurnstileTokenInput(form).value;
+  }
+
+  function initTurnstile() {
+    if (!getTurnstileSiteKey()) return;
+
+    loadTurnstileScript()
+      .then(() => {
+        document.querySelectorAll('form[data-form-service]').forEach(renderTurnstileForForm);
+      })
+      .catch(() => {
+        document.querySelectorAll('form[data-form-service]').forEach((form) => {
+          setStatus(form, "Security check failed to load. Please refresh and try again.", "error");
+        });
+      });
   }
 
   async function submitJsonForm(form, endpoint, headers, payloadOverride) {
@@ -674,6 +781,10 @@
           form.reportValidity();
           return;
         }
+        if (!hasTurnstileToken(form)) {
+          setStatus(form, "Please complete the security check.", "error");
+          return;
+        }
 
         clearStatus(form);
         resetSubmissionConfirmation(form);
@@ -740,6 +851,7 @@
         } catch (error) {
           setStatus(form, error.message || "Failed to load checkout.", "error");
         } finally {
+          resetTurnstile(form);
           if (submitButton) {
             submitButton.disabled = false;
           }
@@ -760,6 +872,11 @@
 
       if (!form.checkValidity()) {
         form.reportValidity();
+        return;
+      }
+      if (!hasTurnstileToken(form)) {
+        setInlineState(form, "error", "Please complete the security check.");
+        setStatus(form, "Please complete the security check.", "error");
         return;
       }
 
@@ -807,6 +924,7 @@
         setInlineState(form, "error", error.message || "Submission failed.");
         setStatus(form, error.message || "Submission failed.", "error");
       } finally {
+        resetTurnstile(form);
         if (submitButton) {
           submitButton.disabled = false;
         }
@@ -820,6 +938,11 @@
 
       if (!form.checkValidity()) {
         form.reportValidity();
+        return;
+      }
+      if (!hasTurnstileToken(form)) {
+        setInlineState(form, "error", "Please complete the security check.");
+        setStatus(form, "Please complete the security check.", "error");
         return;
       }
 
@@ -861,6 +984,7 @@
         setInlineState(form, "error", error.message || "Message failed to send.");
         setStatus(form, error.message || "Message failed to send.", "error");
       } finally {
+        resetTurnstile(form);
         if (submitButton) {
           submitButton.disabled = false;
         }
@@ -883,6 +1007,8 @@
       });
     }
   });
+
+  initTurnstile();
 
   /**
    * Correct scrolling position upon page load for URLs containing hash links.

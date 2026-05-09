@@ -122,6 +122,8 @@ const COMPLETED_PAYPAL_EVENT_TYPES = [
   "PAYMENT.SALE.COMPLETED"
 ];
 
+const TURNSTILE_VERIFY_URL = "https://challenges.cloudflare.com/turnstile/v0/siteverify";
+
 const KNOWN_PAYPAL_BUTTONS = {
   "JXGD7Q2CWLYVN": {
     label: "Golf Registration - Foursome",
@@ -521,7 +523,7 @@ function handleContact_(e) {
     normalizeValue_(payload.message),
     normalizeValue_(payload.page_url || payload.pageUrl),
     normalizeValue_(payload.user_agent || payload.userAgent),
-    JSON.stringify(payload)
+    serializePayloadForStorage_(payload)
   ]);
 
   const notification = trySendContactNotification_(cfg, payload);
@@ -567,7 +569,7 @@ function handleGrantApplication_(e) {
     normalizeValue_(payload.page_url || payload.pageUrl),
     normalizeValue_(payload.form_name),
     normalizeValue_(payload.timestamp),
-    JSON.stringify(payload)
+    serializePayloadForStorage_(payload)
   ]);
 
   const notification = trySendGrantNotification_(cfg, payload);
@@ -594,7 +596,7 @@ function handleSupportDonation_(e) {
     normalizeValue_(payload.monthly_gift),
     normalizeValue_(payload.page_url || payload.pageUrl),
     normalizeValue_(payload.user_agent || payload.userAgent),
-    JSON.stringify(payload)
+    serializePayloadForStorage_(payload)
   ]);
 
   return json_({ ok: true });
@@ -642,6 +644,9 @@ function validatePublicSubmission_(payload, action) {
   if (!startedAt || isNaN(startedAt)) return "missing_form_started_at";
   const minimumAgeMs = getMinimumFormAgeMs_(action);
   if (Date.now() - startedAt < minimumAgeMs) return "submitted_too_quickly";
+
+  const turnstileReason = validateTurnstileIfConfigured_(payload, action);
+  if (turnstileReason) return turnstileReason;
 
   if (action === "contact") {
     if (!hasText_(payload.name) || !hasText_(payload.email) || !hasText_(payload.subject) || !hasText_(payload.message)) {
@@ -819,6 +824,47 @@ function isDuplicateSubmission_(cacheKey, ttlSeconds) {
   return false;
 }
 
+function validateTurnstileIfConfigured_(payload, action) {
+  if (action === "paypal_return") return "";
+
+  const secret = getOptionalProp_("TURNSTILE_SECRET_KEY");
+  if (!secret) return "";
+
+  const token = normalizeValue_(
+    payload["cf-turnstile-response"] ||
+    payload.turnstileToken ||
+    payload.turnstile_token
+  );
+  if (!token || token.length > 2048) return "missing_turnstile_token";
+
+  try {
+    const response = UrlFetchApp.fetch(TURNSTILE_VERIFY_URL, {
+      method: "post",
+      contentType: "application/json",
+      payload: JSON.stringify({
+        secret: secret,
+        response: token
+      }),
+      muteHttpExceptions: true
+    });
+    const statusCode = response.getResponseCode();
+    const result = JSON.parse(response.getContentText() || "{}");
+
+    if (statusCode < 200 || statusCode >= 300 || result.success !== true) {
+      return "turnstile_failed";
+    }
+
+    const hostname = normalizeValue_(result.hostname).toLowerCase();
+    if (hostname && ALLOWED_PAGE_HOSTS.indexOf(hostname) === -1) {
+      return "turnstile_host_mismatch";
+    }
+  } catch (err) {
+    return "turnstile_verification_error";
+  }
+
+  return "";
+}
+
 function sha256Hex_(value) {
   const bytes = Utilities.computeDigest(Utilities.DigestAlgorithm.SHA_256, value);
   return bytes.map(function(byte) {
@@ -884,6 +930,9 @@ function serializePayloadForStorage_(payload) {
   }
   if (copy.form_submission_token) {
     copy.form_submission_token = "[omitted_form_token]";
+  }
+  if (copy["cf-turnstile-response"]) {
+    copy["cf-turnstile-response"] = "[omitted_turnstile_token]";
   }
   return JSON.stringify(copy);
 }
@@ -1215,7 +1264,8 @@ function getConfig_() {
     sheetId: getRequiredProp_("SHEET_ID"),
     logoFolderId: PropertiesService.getScriptProperties().getProperty("LOGO_FOLDER_ID") || "",
     notifyEmail: PropertiesService.getScriptProperties().getProperty("NOTIFY_EMAIL") || "",
-    notifyEmails: PropertiesService.getScriptProperties().getProperty("NOTIFY_EMAILS") || ""
+    notifyEmails: PropertiesService.getScriptProperties().getProperty("NOTIFY_EMAILS") || "",
+    turnstileSecretKey: getOptionalProp_("TURNSTILE_SECRET_KEY")
   };
 }
 
@@ -1223,6 +1273,10 @@ function getRequiredProp_(key) {
   const value = PropertiesService.getScriptProperties().getProperty(key);
   if (!value) throw new Error("Missing Script Property: " + key);
   return value;
+}
+
+function getOptionalProp_(key) {
+  return PropertiesService.getScriptProperties().getProperty(key) || "";
 }
 
 function getOrCreateSheet_(ss, name, headers) {

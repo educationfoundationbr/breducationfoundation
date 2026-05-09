@@ -680,6 +680,12 @@ h6 {
   color: color-mix(in srgb, var(--default-color), transparent 20%);
 }
 
+.turnstile-wrap {
+  display: flex;
+  justify-content: center;
+  margin: 14px 0;
+}
+
 /*--------------------------------------------------------------
 # Scroll Top Button
 --------------------------------------------------------------*/
